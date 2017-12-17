@@ -20,6 +20,7 @@ import javax.swing.KeyStroke;
 import javax.swing.border.LineBorder;
 
 import com.ambi.formula.gamemodel.GameModel;
+import com.ambi.formula.gamemodel.MakeTurn;
 import com.ambi.formula.gamemodel.labels.OptionsLabels;
 
 /**
@@ -40,7 +41,6 @@ public final class OptionsWindow extends JFrame implements PropertyChangeListene
 
         setModel = true;
         initComponents();
-        model.getTurn().setTurns(Integer.valueOf((String) comboTurns.getSelectedItem()));
 
         // Close the dialog when Esc is pressed
         String cancelName = "cancel";
@@ -102,7 +102,7 @@ public final class OptionsWindow extends JFrame implements PropertyChangeListene
 
         labelGrid.setText(optionLabels.getValue(OptionsLabels.PAPER_SIZE));
 
-        gridSpinner.setModel(new javax.swing.SpinnerNumberModel(15, 10, 35, 1));
+        gridSpinner.setModel(new javax.swing.SpinnerNumberModel(this.model.gridSize(), 10, 35, 1));
         gridSpinner.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 gridSpinnerStateChanged(evt);
@@ -116,16 +116,14 @@ public final class OptionsWindow extends JFrame implements PropertyChangeListene
 
         labelWidth.setText(optionLabels.getValue(OptionsLabels.PAPER_WIDTH));
 
-        paperHeight.setModel(new javax.swing.SpinnerNumberModel(40, 30, null, 10));
-        model.setPaperHeight(((Number)paperHeight.getValue()).intValue());
+        paperHeight.setModel(new javax.swing.SpinnerNumberModel(this.model.getPaperHeight(), 30, null, 10));
         paperHeight.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 paperHeightStateChanged(evt);
             }
         });
 
-        paperWidth.setModel(new javax.swing.SpinnerNumberModel(80, 30, null, 10));
-        model.setPaperWidth(((Number)paperWidth.getValue()).intValue());
+        paperWidth.setModel(new javax.swing.SpinnerNumberModel(this.model.getPaperWidth(), 30, null, 10));
         paperWidth.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 paperWidthStateChanged(evt);
@@ -179,15 +177,17 @@ public final class OptionsWindow extends JFrame implements PropertyChangeListene
 
         labelTurns.setText(optionLabels.getValue(OptionsLabels.NO_TURNS));
 
-        comboTurns.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "4", "5", "9" }));
+        comboTurns.setModel(new javax.swing.DefaultComboBoxModel<>(new Integer[] {MakeTurn.FOUR_TURNS, MakeTurn.FIVE_TURNS, MakeTurn.NINE_TURNS}));
         comboTurns.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 comboTurnsItemStateChanged(evt);
             }
         });
-        comboTurns.setSelectedIndex(0);
+        comboTurns.setSelectedItem(model.getTurn().getTurnsCount());
 
-        firstWins.setSelected(true);
+        if (model.getTurn().getFinishType() == MakeTurn.FIRST_WIN) {
+            firstWins.setSelected(true);
+        }
         firstWins.setText(optionLabels.getValue(OptionsLabels.RULE_FIRST));
         firstWins.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -195,6 +195,9 @@ public final class OptionsWindow extends JFrame implements PropertyChangeListene
             }
         });
 
+        if (model.getTurn().getFinishType() == MakeTurn.SECOND_CHANCE) {
+            roundEnd.setSelected(true);
+        }
         roundEnd.setText(optionLabels.getValue(OptionsLabels.RULE_SECOND));
         roundEnd.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -203,6 +206,9 @@ public final class OptionsWindow extends JFrame implements PropertyChangeListene
         });
 
         collision.setText(optionLabels.getValue(OptionsLabels.RULE_COLISION));
+        if (model.getTurn().getFinishType() == MakeTurn.COLLISION) {
+            collision.setSelected(true);
+        }
         collision.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 collisionActionPerformed(evt);
@@ -333,8 +339,8 @@ public final class OptionsWindow extends JFrame implements PropertyChangeListene
 
         labelShowTurns.setText(optionLabels.getValue(OptionsLabels.SHOW_TURNS));
 
-        showTurns.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "3", "5", "10", "20", "MAX" }));
-        showTurns.setSelectedIndex(4);
+        showTurns.setModel(new javax.swing.DefaultComboBoxModel(new Integer[] {MakeTurn.LENGTH_3, MakeTurn.LENGTH_5, MakeTurn.LENGTH_10, MakeTurn.LENGTH_20, MakeTurn.LENGTH_MAX}));
+        showTurns.setSelectedItem(this.model.getTurn().getLengthHist());
         showTurns.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 showTurnsItemStateChanged(evt);
@@ -388,9 +394,6 @@ public final class OptionsWindow extends JFrame implements PropertyChangeListene
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        model.getTurn().getFormula(1).setLengthHist(showTurns.getSelectedItem());
-        model.getTurn().getFormula(2).setLengthHist(showTurns.getSelectedItem());
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -433,24 +436,23 @@ public final class OptionsWindow extends JFrame implements PropertyChangeListene
     }//GEN-LAST:event_name2CaretUpdate
 
     private void firstWinsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_firstWinsActionPerformed
-        model.getTurn().setFinishType(1);
+        model.getTurn().setFinishType(MakeTurn.FIRST_WIN);
     }//GEN-LAST:event_firstWinsActionPerformed
 
     private void roundEndActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_roundEndActionPerformed
-        model.getTurn().setFinishType(2);
+        model.getTurn().setFinishType(MakeTurn.SECOND_CHANCE);
     }//GEN-LAST:event_roundEndActionPerformed
 
     private void collisionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_collisionActionPerformed
-        model.getTurn().setFinishType(0);
+        model.getTurn().setFinishType(MakeTurn.COLLISION);
     }//GEN-LAST:event_collisionActionPerformed
 
     private void comboTurnsItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_comboTurnsItemStateChanged
-        model.getTurn().setTurns(Integer.valueOf((String) comboTurns.getSelectedItem()));
+        model.getTurn().setTurns(Integer.valueOf(comboTurns.getSelectedItem().toString()));
     }//GEN-LAST:event_comboTurnsItemStateChanged
 
     private void showTurnsItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_showTurnsItemStateChanged
-        model.getTurn().getFormula(1).setLengthHist(showTurns.getSelectedItem());
-        model.getTurn().getFormula(2).setLengthHist(showTurns.getSelectedItem());
+        model.getTurn().setLengthHist(showTurns.getSelectedItem());
     }//GEN-LAST:event_showTurnsItemStateChanged
 
     private void paperHeightStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_paperHeightStateChanged

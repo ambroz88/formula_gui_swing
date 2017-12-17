@@ -35,13 +35,14 @@ public final class Draw extends JPanel implements PropertyChangeListener {
         gModel = model;
         gModel.addPropertyChangeListener(this);
         setBorder(new LineBorder(Color.black));
+        updateSize();
     }
 
     @Override
     public void paintComponent(Graphics g) {
         Graphics2D g2 = (Graphics2D) g;
         Color back, colorPoints;
-        if (gModel.getStage() < 5) {
+        if (gModel.getStage() < GameModel.FIRST_TURN) {
             back = Color.white;
         } else {
             back = Colors.GAME_SAND;
@@ -73,7 +74,7 @@ public final class Draw extends JPanel implements PropertyChangeListener {
             colorPoints = gModel.getTurn().getFormula(player).getColor();
         }
         g2.setColor(colorPoints);
-        if (gModel.getStage() > 5) {
+        if (gModel.getStage() > GameModel.FIRST_TURN) {
             drawTurns(g2);
         } else {
             drawPoints(g2);
@@ -212,7 +213,11 @@ public final class Draw extends JPanel implements PropertyChangeListener {
             g.setColor(form.getColor());
             double arrowAngle = 0.5;//0.5235; //in radians ~ 30°
             double arrowLength = 0.6 * gModel.gridSize();
-            for (int i = 0; i < form.getLength() - 1; i++) {
+            int formulaLength = form.getLength();
+            if (formulaLength > gModel.getTurn().getLengthHist()) {
+                formulaLength = gModel.getTurn().getLengthHist() + 1;
+            }
+            for (int i = form.getLength() - formulaLength; i < form.getLength() - 1; i++) {
                 //start of formula turn
                 Point start = new Point(form.getPoint(i).x * gModel.gridSize(),
                         form.getPoint(i).y * gModel.gridSize());
@@ -221,6 +226,7 @@ public final class Draw extends JPanel implements PropertyChangeListener {
                         form.getPoint(i + 1).y * gModel.gridSize());
 
                 g.drawLine(start.getX(), start.getY(), end.getX(), end.getY());
+
                 //------------------- DRAWING ARROW ---------------------
                 //input points start and end must be already mulitplied by gridSize
                 Point end1 = Calc.rotatePoint(start, end, arrowAngle, arrowLength);
@@ -231,10 +237,15 @@ public final class Draw extends JPanel implements PropertyChangeListener {
         }
     }
 
+    private void updateSize() {
+        this.setPreferredSize(new Dimension(gModel.getPaperWidth() * gModel.gridSize(), gModel.getPaperHeight() * gModel.gridSize()));
+        revalidate();
+    }
+
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         if (evt.getPropertyName().equals("grid")) {
-            repaint();
+            updateSize();
         } else if (evt.getPropertyName().equals("repaint")) {
             repaint();
         } else if (evt.getPropertyName().contains("startDraw")) {
@@ -242,13 +253,9 @@ public final class Draw extends JPanel implements PropertyChangeListener {
         } else if (evt.getPropertyName().equals("startGame")) {
             repaint();
         } else if (evt.getPropertyName().equals("paperWidth")) {
-            this.setPreferredSize(new Dimension((int) evt.getNewValue() * gModel.gridSize(), this.getPreferredSize().height));
-            revalidate();
-            repaint();
+            updateSize();
         } else if (evt.getPropertyName().equals("paperHeight")) {
-            this.setPreferredSize(new Dimension(this.getPreferredSize().width, (int) evt.getNewValue() * gModel.gridSize()));
-            revalidate();
-            repaint();
+            updateSize();
         }
     }
 
