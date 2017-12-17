@@ -12,6 +12,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JPopupMenu;
 
 import com.ambi.formula.gamemodel.GameModel;
+import com.ambi.formula.gamemodel.labels.OptionsLabels;
 import com.ambi.formula.gui.swing.subcomponents.StartMenu;
 import com.ambi.formula.gui.swing.subcomponents.TrackMenu;
 import com.ambi.formula.gui.swing.windows.OptionsWindow;
@@ -20,7 +21,7 @@ import com.ambi.formula.gui.swing.windows.OptionsWindow;
  *
  * @author Jiri Ambroz
  */
-public class TopMenuBar extends JMenuBar {
+public final class TopMenuBar extends JMenuBar {
 
     public static final Font MENU_FONT = new Font("Segoe UI", 0, 16);
 
@@ -31,9 +32,11 @@ public class TopMenuBar extends JMenuBar {
     private JMenu language;
 
     private final GameModel gModel;
+    private OptionsLabels optionsLabels;
 
     public TopMenuBar(GameModel gModel) {
         this.gModel = gModel;
+        optionsLabels = new OptionsLabels(this.gModel.getLanguage());
         initComponents();
     }
 
@@ -49,6 +52,7 @@ public class TopMenuBar extends JMenuBar {
                 return new JPopupMenu();
             }
         };
+        optionsMenu.setText(optionsLabels.getValue(OptionsLabels.TITLE) + "...");
         optionsMenu.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent evt) {
@@ -72,16 +76,14 @@ public class TopMenuBar extends JMenuBar {
                 if (gModel.getLanguage().equals("CZ")) {
                     language.setIcon(new ImageIcon(getClass().getClassLoader().getResource("CzechFlag 24x24.png")));
                     gModel.setLanguage("EN");
-                    optionsMenu.setText("Options...");
                 } else {
                     language.setIcon(new ImageIcon(getClass().getClassLoader().getResource("BritishFlag 24x24.png")));
                     gModel.setLanguage("CZ");
-                    optionsMenu.setText("Nastavení...");
                 }
+                optionsLabels = new OptionsLabels(gModel.getLanguage());
+                optionsMenu.setText(optionsLabels.getValue(OptionsLabels.TITLE) + "...");
             }
         });
-
-        optionsMenu.setText("Options...");
 
         add(trackMenu);
         add(startMenu);

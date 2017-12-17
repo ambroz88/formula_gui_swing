@@ -17,7 +17,7 @@ import com.ambi.formula.gui.swing.subcomponents.StatisticPanel;
  *
  * @author Jiri Ambroz
  */
-public class StatisticsComponent extends JPanel implements PropertyChangeListener {
+public final class StatisticsComponent extends JPanel implements PropertyChangeListener {
 
     private final GameModel model;
     private final StatisticPanel statisticPanel1, statisticPanel2;

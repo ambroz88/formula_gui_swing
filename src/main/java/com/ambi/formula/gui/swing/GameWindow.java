@@ -18,7 +18,7 @@ import com.ambi.formula.gui.utils.MouseDragging;
 /**
  * Component that shows main window with track and formulas and toolbar.
  *
- * @author Jiří Ambrož <jiri.ambroz@surmon.org>
+ * @author Jiri Ambroz
  */
 public final class GameWindow extends JFrame {
 
@@ -32,13 +32,12 @@ public final class GameWindow extends JFrame {
         this.requestFocusInWindow(true);
 
         gModel = new GameModel();
+        gModel.setLanguage("EN");
 
         TopMenuBar topMenu = new TopMenuBar(gModel);
         TracksComponent trackList = new TracksComponent(gModel);
         StatisticsComponent statistics = new StatisticsComponent(gModel);
         JScrollPane scrollDrawPanel = createDrawPanel();
-
-        gModel.setLanguage("EN");
 
         add(topMenu, BorderLayout.NORTH);
         add(trackList, BorderLayout.WEST);

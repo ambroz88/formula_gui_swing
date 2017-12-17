@@ -55,12 +55,12 @@ public final class StatisticPanel extends JPanel implements PropertyChangeListen
     }
 
     public void setMoves(int number) {
-        movements.setText(statLabels.getValue(StatisticLabels.MOVES) + "" + number);
+        movements.setText(statLabels.getValue(StatisticLabels.MOVES) + " " + number);
         movements.repaint();
     }
 
     public void setDistance(double number) {
-        distance.setText(statLabels.getValue(StatisticLabels.DISTANCE) + "" + number);
+        distance.setText(statLabels.getValue(StatisticLabels.DISTANCE) + " " + number);
         distance.repaint();
     }
 
