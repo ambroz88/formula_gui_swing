@@ -106,7 +106,7 @@ public final class TrackMenu extends JMenu implements PropertyChangeListener {
             public void actionPerformed(ActionEvent evt) {
                 Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
 
-                SaveTrackWindow saveTrackWindow = new SaveTrackWindow(builder);
+                SaveTrackWindow saveTrackWindow = new SaveTrackWindow(builder.getModel());
                 saveTrackWindow.setLocation(dim.width / 2 - saveTrackWindow.getWidth() / 2, dim.height / 2 - saveTrackWindow.getHeight() / 2);
                 saveTrackWindow.setVisible(true);
             }
@@ -133,7 +133,7 @@ public final class TrackMenu extends JMenu implements PropertyChangeListener {
     }
 
     private void newTrack() {
-        builder.getModel().reset("game");
+        builder.getModel().resetGame();
         switchStart.setEnabled(false);
         createLeft.setSelected(true);
     }

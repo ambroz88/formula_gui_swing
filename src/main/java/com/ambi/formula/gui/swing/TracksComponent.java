@@ -31,7 +31,6 @@ import com.ambi.formula.gui.swing.windows.ConfirmWindow;
  */
 public final class TracksComponent extends JPanel implements ListSelectionListener, PropertyChangeListener {
 
-    private static final int PANEL_WIDTH = 150;
     private final GameModel model;
     private final JLabel trackLabel;
     private JList<String> list;
@@ -40,15 +39,13 @@ public final class TracksComponent extends JPanel implements ListSelectionListen
     public TracksComponent(GameModel gameModel) {
         setLayout(new BorderLayout());
         setBorder(new LineBorder(Color.BLACK, 1));
-        setPreferredSize(new Dimension(PANEL_WIDTH, 600));
 
         this.model = gameModel;
         this.model.addPropertyChangeListener(this);
         index = -1;
 
-        trackLabel = new JLabel("    Available Tracks:    ");
+        trackLabel = new JLabel("     Available Tracks:     ");
         trackLabel.setHorizontalTextPosition(JLabel.CENTER);
-        trackLabel.setPreferredSize(new Dimension(PANEL_WIDTH, 30));
 
         initTrackList();
         updateTracks();
@@ -61,7 +58,6 @@ public final class TracksComponent extends JPanel implements ListSelectionListen
         list = new JList<>();
         list.setLayout(new FlowLayout(FlowLayout.CENTER));
         list.addListSelectionListener(this);
-        list.setPreferredSize(new Dimension(PANEL_WIDTH - 10, this.getPreferredSize().height));
 
         // Delete track when Delete is pressed
         list.addKeyListener(new KeyListener() {
@@ -121,7 +117,7 @@ public final class TracksComponent extends JPanel implements ListSelectionListen
         if (name != null) {
             Track track = TrackIO.trackFromJSON(name, model);
             if (track != null) {
-                model.reset("game");
+                model.resetGame();
                 track.setReady(true);
                 model.getBuilder().setTrack(track);
             } else {

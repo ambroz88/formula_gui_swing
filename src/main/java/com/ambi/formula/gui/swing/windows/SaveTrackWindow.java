@@ -18,7 +18,7 @@ import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.KeyStroke;
 
-import com.ambi.formula.gamemodel.TrackBuilder;
+import com.ambi.formula.gamemodel.GameModel;
 import com.ambi.formula.gamemodel.labels.DialogLabels;
 import com.ambi.formula.gamemodel.labels.HintLabels;
 
@@ -30,16 +30,16 @@ import com.ambi.formula.gamemodel.labels.HintLabels;
  */
 public final class SaveTrackWindow extends JDialog {
 
-    private final TrackBuilder builder;
+    private final GameModel gameModel;
     private final DialogLabels dialogLabels;
     private JLabel hintLabel;
     private JTextField nameField;
     private boolean saved;
 
-    public SaveTrackWindow(TrackBuilder trackingBuilder) {
+    public SaveTrackWindow(GameModel gModel) {
         super();
-        this.builder = trackingBuilder;
-        dialogLabels = new DialogLabels(this.builder.getModel().getLanguage());
+        this.gameModel = gModel;
+        dialogLabels = new DialogLabels(this.gameModel.getLanguage());
 
         setPreferredSize(new Dimension(330, 110));
         setLayout(new FlowLayout(FlowLayout.CENTER, 5, 10));
@@ -82,7 +82,7 @@ public final class SaveTrackWindow extends JDialog {
         nameField.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent evt) {
-                saved = builder.saveTrack(nameField.getText());
+                saved = gameModel.saveTrack(nameField.getText());
                 doClose();
             }
         });
@@ -95,7 +95,7 @@ public final class SaveTrackWindow extends JDialog {
 
     private void doClose() {
         if (!saved) {
-            builder.getModel().fireHint(HintLabels.HINT_FAILED);
+            gameModel.fireHint(HintLabels.HINT_FAILED);
         }
         dispose();
     }
