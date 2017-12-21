@@ -79,6 +79,25 @@ public final class Draw extends JPanel implements PropertyChangeListener {
         } else {
             drawPoints(g2);
         }
+
+        drawTrackPoints(g2);
+    }
+
+    /**
+     * It draws crosses in all points of the track - just in modification stage
+     * of the game.
+     *
+     * @param g2 graphics
+     */
+    private void drawTrackPoints(Graphics2D g2) {
+        if (gModel.getStage() == GameModel.EDIT_PRESS || gModel.getStage() == GameModel.EDIT_RELEASE) {
+            for (int i = 1; i < gModel.getBuilder().left().getLength() - 1; i++) {
+                drawCross(g2, gModel.getBuilder().left().getPoint(i));
+            }
+            for (int i = 1; i < gModel.getBuilder().right().getLength() - 1; i++) {
+                drawCross(g2, gModel.getBuilder().right().getPoint(i));
+            }
+        }
     }
 
     /**

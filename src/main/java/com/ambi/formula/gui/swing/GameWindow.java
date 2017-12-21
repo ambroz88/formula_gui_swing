@@ -18,7 +18,7 @@ import javax.swing.KeyStroke;
 
 import com.ambi.formula.gamemodel.GameModel;
 import com.ambi.formula.gui.swing.subcomponents.Draw;
-import com.ambi.formula.gui.utils.MouseDragging;
+import com.ambi.formula.gui.tools.MouseDragging;
 
 /**
  * Component that shows main window with track and formulas and toolbar.
