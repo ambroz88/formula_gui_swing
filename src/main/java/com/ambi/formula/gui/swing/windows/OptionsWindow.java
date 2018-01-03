@@ -116,14 +116,14 @@ public final class OptionsWindow extends JFrame implements PropertyChangeListene
 
         labelWidth.setText(optionLabels.getValue(OptionsLabels.PAPER_WIDTH));
 
-        paperHeight.setModel(new javax.swing.SpinnerNumberModel(this.model.getPaperHeight(), 30, null, 10));
+        paperHeight.setModel(new javax.swing.SpinnerNumberModel(this.model.getPaper().getHeight(), 30, null, 10));
         paperHeight.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 paperHeightStateChanged(evt);
             }
         });
 
-        paperWidth.setModel(new javax.swing.SpinnerNumberModel(this.model.getPaperWidth(), 30, null, 10));
+        paperWidth.setModel(new javax.swing.SpinnerNumberModel(this.model.getPaper().getWidth(), 30, null, 10));
         paperWidth.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 paperWidthStateChanged(evt);
@@ -274,7 +274,7 @@ public final class OptionsWindow extends JFrame implements PropertyChangeListene
         labelSecond.setText("2.");
 
         colorPanel1.setBackground(new java.awt.Color(0, 204, 51));
-        model.getTurn().getFormula(1).setColor(colorPanel1.getBackground());
+        model.getTurn().getFormula(1).setColor(colorPanel1.getBackground().getRGB());
         colorPanel1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         colorPanel1.setPreferredSize(new Dimension(20, 20));
         colorPanel1.addMouseListener(new MouseAdapter() {
@@ -306,7 +306,7 @@ public final class OptionsWindow extends JFrame implements PropertyChangeListene
         );
 
         colorPanel2.setBackground(new java.awt.Color(255, 51, 51));
-        model.getTurn().getFormula(2).setColor(colorPanel2.getBackground());
+        model.getTurn().getFormula(2).setColor(colorPanel2.getBackground().getRGB());
         colorPanel2.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         colorPanel2.setPreferredSize(new Dimension(20, 20));
         colorPanel2.addMouseListener(new MouseAdapter() {
@@ -479,7 +479,7 @@ public final class OptionsWindow extends JFrame implements PropertyChangeListene
         Color color = JColorChooser.showDialog(panel, "Choose a color for " + model.getTurn().getFormula(id).getName(), panel.getBackground());
         if (color != null) {
             panel.setBackground(color);
-            model.getTurn().getFormula(id).setColor(color);
+            model.getTurn().getFormula(id).setColor(color.getRGB());
         }
     }
 

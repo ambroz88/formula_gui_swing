@@ -71,7 +71,7 @@ public final class Draw extends JPanel implements PropertyChangeListener {
         if (player == 0) {
             colorPoints = Color.BLUE;
         } else {
-            colorPoints = gModel.getTurn().getFormula(player).getColor();
+            colorPoints = new Color(gModel.getTurn().getFormula(player).getColor());
         }
         g2.setColor(colorPoints);
         if (gModel.getStage() > GameModel.FIRST_TURN) {
@@ -202,7 +202,7 @@ public final class Draw extends JPanel implements PropertyChangeListener {
             drawLine(g2, track.getStart());
             if (track.getReady()) {
                 drawLine(g2, track.getFinish());
-                List<Polyline> lines = track.analyzeTrack();
+                List<Polyline> lines = gModel.getBuilder().getCheckLines();
                 g2.setStroke(new BasicStroke(1));
                 for (Polyline line : lines) {
                     drawLine(g2, line);
@@ -229,7 +229,7 @@ public final class Draw extends JPanel implements PropertyChangeListener {
 
     private void drawFormule(Graphics2D g, Formula form) {
         if (form.getLength() > 0) {
-            g.setColor(form.getColor());
+            g.setColor(new Color(form.getColor()));
             double arrowAngle = 0.5;//0.5235; //in radians ~ 30°
             double arrowLength = 0.6 * gModel.gridSize();
             int formulaLength = form.getLength();
@@ -257,7 +257,7 @@ public final class Draw extends JPanel implements PropertyChangeListener {
     }
 
     private void updateSize() {
-        this.setPreferredSize(new Dimension(gModel.getPaperWidth() * gModel.gridSize(), gModel.getPaperHeight() * gModel.gridSize()));
+        this.setPreferredSize(new Dimension(gModel.getPaper().getWidth() * gModel.gridSize(), gModel.getPaper().getHeight() * gModel.gridSize()));
         revalidate();
     }
 

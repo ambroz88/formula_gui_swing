@@ -37,11 +37,11 @@ public final class StatisticPanel extends JPanel implements PropertyChangeListen
         statLabels = new StatisticLabels(language);
 
         playerLabel = new JLabel(f.getName(), JLabel.CENTER);
-        playerLabel.setForeground(f.getColor());
+        playerLabel.setForeground(new Color(f.getColor()));
         playerLabel.setFont(new Font("Tahoma", 1, 13));
 
         finish = new JLabel("", JLabel.CENTER);
-        finish.setForeground(f.getColor());
+        finish.setForeground(new Color(f.getColor()));
 
         movements = new JLabel();
         movements.setText(statLabels.getValue(StatisticLabels.MOVES) + " 0");
@@ -115,7 +115,7 @@ public final class StatisticPanel extends JPanel implements PropertyChangeListen
                 setPlayerName(model.getName());
                 break;
             case "color":
-                setColor(model.getColor());
+                setColor(new Color(model.getColor()));
                 break;
             case "stop":
                 setFinish(model.getWait());

@@ -162,7 +162,7 @@
         <Component class="javax.swing.JSpinner" name="paperHeight">
           <Properties>
             <Property name="model" type="javax.swing.SpinnerModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-              <Connection code="new javax.swing.SpinnerNumberModel(this.model.getPaperHeight(), 30, null, 10)" type="code"/>
+              <Connection code="new javax.swing.SpinnerNumberModel(this.model.getPaper().getHeight(), 30, null, 10)" type="code"/>
             </Property>
           </Properties>
           <Events>
@@ -172,7 +172,7 @@
         <Component class="javax.swing.JSpinner" name="paperWidth">
           <Properties>
             <Property name="model" type="javax.swing.SpinnerModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-              <Connection code="new javax.swing.SpinnerNumberModel(this.model.getPaperWidth(), 30, null, 10)" type="code"/>
+              <Connection code="new javax.swing.SpinnerNumberModel(this.model.getPaper().getWidth(), 30, null, 10)" type="code"/>
             </Property>
           </Properties>
           <Events>
@@ -421,7 +421,7 @@
         </Component>
         <Container class="javax.swing.JPanel" name="colorPanel1">
           <Properties>
-            <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor" postCode="model.getTurn().getFormula(1).setColor(colorPanel1.getBackground());">
+            <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor" postCode="model.getTurn().getFormula(1).setColor(colorPanel1.getBackground().getRGB());">
               <Color blue="33" green="cc" red="0" type="rgb"/>
             </Property>
             <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
@@ -449,7 +449,7 @@
         </Container>
         <Container class="javax.swing.JPanel" name="colorPanel2">
           <Properties>
-            <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor" postCode="model.getTurn().getFormula(2).setColor(colorPanel2.getBackground());">
+            <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor" postCode="model.getTurn().getFormula(2).setColor(colorPanel2.getBackground().getRGB());">
               <Color blue="33" green="33" red="ff" type="rgb"/>
             </Property>
             <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
