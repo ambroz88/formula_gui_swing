@@ -34,6 +34,7 @@ public final class Draw extends JPanel implements PropertyChangeListener {
     public Draw(GameModel model) {
         gModel = model;
         gModel.addPropertyChangeListener(this);
+        gModel.getPaper().addPropertyChangeListener(this);
         setBorder(new LineBorder(Color.black));
         updateSize();
     }
@@ -53,7 +54,7 @@ public final class Draw extends JPanel implements PropertyChangeListener {
         if (track.isReadyForDraw()) {
             //draw complete track
             g2.setColor(Colors.ROAD_SNOW);
-            int[][] trackPoints = track.getTrack(gModel.gridSize());
+            int[][] trackPoints = track.getTrack(gModel.getPaper().getGridSize());
             g2.fillPolygon(trackPoints[0], trackPoints[1], track.getIndex(Track.LEFT) + track.getIndex(Track.RIGHT) + 2);
         }
         //draw grid:
@@ -109,8 +110,8 @@ public final class Draw extends JPanel implements PropertyChangeListener {
     private void drawPoint(Graphics g, Point center) {
         int dim = 6;
         if (center != null) {
-            g.fillOval(center.getX() * gModel.gridSize() - dim / 2,
-                    center.getY() * gModel.gridSize() - dim / 2, dim, dim);
+            g.fillOval(center.getX() * gModel.getPaper().getGridSize() - dim / 2,
+                    center.getY() * gModel.getPaper().getGridSize() - dim / 2, dim, dim);
         }
     }
 
@@ -121,8 +122,9 @@ public final class Draw extends JPanel implements PropertyChangeListener {
      * @param data Polyline of Points where crosses will be draw
      */
     private void drawCross(Graphics g, Point center) {
-        center = new Point(center.x * gModel.gridSize(), center.y * gModel.gridSize());
-        int crossSize = (int) (0.33 * gModel.gridSize());
+        int gridSize = gModel.getPaper().getGridSize();
+        center = new Point(center.x * gridSize, center.y * gridSize);
+        int crossSize = (int) (0.33 * gridSize);
         Point vert1 = new Point(center.x - crossSize, center.y);
         Point vert2 = new Point(center.x + crossSize, center.y);
         Point hor1 = new Point(center.x, center.y - crossSize);
@@ -212,7 +214,7 @@ public final class Draw extends JPanel implements PropertyChangeListener {
     }
 
     private void drawLine(Graphics g, Polyline line) {
-        int gridSize = gModel.gridSize();
+        int gridSize = gModel.getPaper().getGridSize();
         for (int i = 0; i < line.getLength() - 1; i = i + 2) {
             g.drawLine(line.getPoint(i).getX() * gridSize, line.getPoint(i).getY() * gridSize,
                     line.getPoint(i + 1).getX() * gridSize, line.getPoint(i + 1).getY() * gridSize);
@@ -220,7 +222,7 @@ public final class Draw extends JPanel implements PropertyChangeListener {
     }
 
     private void drawPolyline(Graphics g, Polyline line) {
-        int gridSize = gModel.gridSize();
+        int gridSize = gModel.getPaper().getGridSize();
         for (int i = 0; i < line.getLength() - 1; i++) {
             g.drawLine(line.getPoint(i).getX() * gridSize, line.getPoint(i).getY() * gridSize,
                     line.getPoint(i + 1).getX() * gridSize, line.getPoint(i + 1).getY() * gridSize);
@@ -229,20 +231,21 @@ public final class Draw extends JPanel implements PropertyChangeListener {
 
     private void drawFormule(Graphics2D g, Formula form) {
         if (form.getLength() > 0) {
+            int gridSize = gModel.getPaper().getGridSize();
             g.setColor(new Color(form.getColor()));
             double arrowAngle = 0.5;//0.5235; //in radians ~ 30°
-            double arrowLength = 0.6 * gModel.gridSize();
+            double arrowLength = 0.6 * gridSize;
             int formulaLength = form.getLength();
             if (formulaLength > gModel.getTurn().getLengthHist()) {
                 formulaLength = gModel.getTurn().getLengthHist() + 1;
             }
             for (int i = form.getLength() - formulaLength; i < form.getLength() - 1; i++) {
                 //start of formula turn
-                Point start = new Point(form.getPoint(i).x * gModel.gridSize(),
-                        form.getPoint(i).y * gModel.gridSize());
+                Point start = new Point(form.getPoint(i).x * gridSize,
+                        form.getPoint(i).y * gridSize);
                 //end of formula turn
-                Point end = new Point(form.getPoint(i + 1).x * gModel.gridSize(),
-                        form.getPoint(i + 1).y * gModel.gridSize());
+                Point end = new Point(form.getPoint(i + 1).x * gridSize,
+                        form.getPoint(i + 1).y * gridSize);
 
                 g.drawLine(start.getX(), start.getY(), end.getX(), end.getY());
 
@@ -257,20 +260,20 @@ public final class Draw extends JPanel implements PropertyChangeListener {
     }
 
     private void updateSize() {
-        this.setPreferredSize(new Dimension(gModel.getPaper().getWidth() * gModel.gridSize(), gModel.getPaper().getHeight() * gModel.gridSize()));
+        this.setPreferredSize(new Dimension(gModel.getPaper().getWidth() * gModel.getPaper().getGridSize(), gModel.getPaper().getHeight() * gModel.getPaper().getGridSize()));
         revalidate();
     }
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-        if (evt.getPropertyName().equals("grid")) {
-            updateSize();
-        } else if (evt.getPropertyName().equals("repaint")) {
+        if (evt.getPropertyName().equals("repaint")) {
             repaint();
         } else if (evt.getPropertyName().contains("startDraw")) {
             repaint();
         } else if (evt.getPropertyName().equals("startGame")) {
             repaint();
+        } else if (evt.getPropertyName().equals("grid")) {
+            updateSize();
         } else if (evt.getPropertyName().equals("paperWidth")) {
             updateSize();
         } else if (evt.getPropertyName().equals("paperHeight")) {
