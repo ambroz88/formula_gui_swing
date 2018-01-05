@@ -86,7 +86,7 @@ public final class TrackMenu extends JMenu implements PropertyChangeListener {
         switchStart.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent evt) {
-                builder.getModel().switchStart();
+                builder.switchStart();
                 createLeft.setSelected(true);//zaskrtne tlacitko pro tvorbu leve krajnice
             }
         });

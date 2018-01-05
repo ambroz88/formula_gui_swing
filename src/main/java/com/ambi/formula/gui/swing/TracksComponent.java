@@ -112,7 +112,7 @@ public final class TracksComponent extends JPanel implements ListSelectionListen
         }
     }
 
-    public void loadSelectedTrack() {
+    private void loadSelectedTrack() {
         String name = list.getSelectedValue();
         if (name != null) {
             Track track = TrackIO.trackFromJSON(name, model);
@@ -120,6 +120,7 @@ public final class TracksComponent extends JPanel implements ListSelectionListen
                 model.resetGame();
                 track.setReady(true);
                 model.getBuilder().setTrack(track);
+                model.loadTrackActions();
             } else {
                 model.fireHint(HintLabels.WRONG_TRACK);
             }

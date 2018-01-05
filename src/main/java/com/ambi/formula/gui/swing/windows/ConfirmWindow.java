@@ -137,7 +137,7 @@ public final class ConfirmWindow extends JDialog {
 
     private void doClose(int retStatus) {
         if (retStatus == RET_YES) {
-            model.loadSelectedTrack();
+            model.fireLoadTrack();
         }
         dispose();
     }

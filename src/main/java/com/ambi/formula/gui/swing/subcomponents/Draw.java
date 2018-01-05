@@ -92,11 +92,11 @@ public final class Draw extends JPanel implements PropertyChangeListener {
      */
     private void drawTrackPoints(Graphics2D g2) {
         if (gModel.getStage() == GameModel.EDIT_PRESS || gModel.getStage() == GameModel.EDIT_RELEASE) {
-            for (int i = 1; i < gModel.getBuilder().left().getLength() - 1; i++) {
-                drawCross(g2, gModel.getBuilder().left().getPoint(i));
+            for (int i = 1; i < gModel.getBuilder().getLeft().getLength() - 1; i++) {
+                drawCross(g2, gModel.getBuilder().getLeft().getPoint(i));
             }
-            for (int i = 1; i < gModel.getBuilder().right().getLength() - 1; i++) {
-                drawCross(g2, gModel.getBuilder().right().getPoint(i));
+            for (int i = 1; i < gModel.getBuilder().getRight().getLength() - 1; i++) {
+                drawCross(g2, gModel.getBuilder().getRight().getPoint(i));
             }
         }
     }
@@ -135,14 +135,9 @@ public final class Draw extends JPanel implements PropertyChangeListener {
     }
 
     private void drawPoints(Graphics g) {
-        Polyline data = gModel.getPoints();
+        Polyline data = gModel.getBuilder().getPoints();
         for (int i = 0; i < data.getLength(); i++) {
             drawPoint(g, data.getPoint(i));
-        }
-
-        data = gModel.getBadPoints();
-        for (int i = 0; i < data.getLength(); i++) {
-            drawCross(g, data.getPoint(i));
         }
     }
 
@@ -168,20 +163,20 @@ public final class Draw extends JPanel implements PropertyChangeListener {
     private void drawTrack(Graphics2D g2) {
         Track track = gModel.getBuilder().getTrack();
         //left barrier:
-        if (track.left().getLength() > 1) {
+        if (track.getLeft().getLength() > 1) {
             g2.setStroke(new BasicStroke(track.getLeftWidth()));
             g2.setColor(Color.red);
-            drawPolyline(g2, track.left().choose(track.getIndex(Track.LEFT), track.left().getLength() - 1));
+            drawPolyline(g2, track.getLeft().choose(track.getIndex(Track.LEFT), track.getLeft().getLength() - 1));
             g2.setColor(Color.black);
-            drawPolyline(g2, track.left().choose(0, track.getIndex(Track.LEFT)));
+            drawPolyline(g2, track.getLeft().choose(0, track.getIndex(Track.LEFT)));
         }
         //right barrier:
-        if (track.right().getLength() > 1) {
+        if (track.getRight().getLength() > 1) {
             g2.setStroke(new BasicStroke(track.getRightWidth()));
             g2.setColor(Color.red);
-            drawPolyline(g2, track.right().choose(track.getIndex(Track.RIGHT), track.right().getLength() - 1));
+            drawPolyline(g2, track.getRight().choose(track.getIndex(Track.RIGHT), track.getRight().getLength() - 1));
             g2.setColor(Color.black);
-            drawPolyline(g2, track.right().choose(0, track.getIndex(Track.RIGHT)));
+            drawPolyline(g2, track.getRight().choose(0, track.getIndex(Track.RIGHT)));
         }
 
         //left parallel barrier:
@@ -198,7 +193,7 @@ public final class Draw extends JPanel implements PropertyChangeListener {
         }
 
         //draw start and finish (when track is ready):
-        if (track.left().getLength() > 0 && track.right().getLength() > 0) {
+        if (track.getLeft().getLength() > 0 && track.getRight().getLength() > 0) {
             g2.setStroke(new BasicStroke(5));
             g2.setColor(Color.PINK);
             drawLine(g2, track.getStart());
