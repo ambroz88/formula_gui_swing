@@ -54,7 +54,7 @@ public final class PlayersOptionsPanel extends JPanel implements PropertyChangeL
         setBorder(BorderFactory.createTitledBorder(null, optionLabels.getValue(OptionsLabels.PLAYERS), TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, new Font("Arial", 0, 14))); // NOI18N
         setLayout(new FlowLayout(FlowLayout.LEFT, 0, 3));
 
-        for (int i = 1; i <= model.getTurn().getFormulaCount(); i++) {
+        for (int i = 1; i <= model.getTurnMaker().getFormulaCount(); i++) {
             add(new PlayerPanel(i));
         }
 
@@ -62,13 +62,13 @@ public final class PlayersOptionsPanel extends JPanel implements PropertyChangeL
     }
 
     private void showTurnsItemStateChanged(ItemEvent evt) {
-        model.getTurn().setLengthHist(showTurns.getSelectedItem());
+        model.getTurnMaker().setLengthHist(showTurns.getSelectedItem());
     }
 
     private JPanel createTurnsPanel() {
         labelShowTurns.setPreferredSize(new Dimension(110, 25));
         showTurns.setModel(new DefaultComboBoxModel(new Integer[]{MakeTurn.LENGTH_3, MakeTurn.LENGTH_5, MakeTurn.LENGTH_10, MakeTurn.LENGTH_20, MakeTurn.LENGTH_MAX}));
-        showTurns.setSelectedItem(this.model.getTurn().getLengthHist());
+        showTurns.setSelectedItem(this.model.getTurnMaker().getLengthHist());
         showTurns.addItemListener(new ItemListener() {
             @Override
             public void itemStateChanged(ItemEvent evt) {
@@ -102,7 +102,7 @@ public final class PlayersOptionsPanel extends JPanel implements PropertyChangeL
         private final Formula formulaModel;
 
         public PlayerPanel(int formulaID) {
-            this.formulaModel = model.getTurn().getFormula(formulaID);
+            this.formulaModel = model.getTurnMaker().getFormula(formulaID);
             this.formulaModel.addPropertyChangeListener(this);
 
             nameField = new JTextField();

@@ -13,8 +13,9 @@ import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 
-import com.ambi.formula.gamemodel.TrackBuilder;
+import com.ambi.formula.gamemodel.GameModel;
 import com.ambi.formula.gamemodel.datamodel.Track;
+import com.ambi.formula.gamemodel.labels.HintLabels;
 import com.ambi.formula.gamemodel.labels.TrackMenuLabels;
 import com.ambi.formula.gui.swing.TopMenuBar;
 import com.ambi.formula.gui.swing.windows.SaveTrackWindow;
@@ -25,27 +26,29 @@ import com.ambi.formula.gui.swing.windows.SaveTrackWindow;
  */
 public final class TrackMenu extends JMenu implements PropertyChangeListener {
 
-    private final TrackBuilder builder;
-    private final JCheckBoxMenuItem createLeft, createRight, editPoints;
-    private final JMenuItem switchStart, deletePoint, newTrack, saveTrack;
+    private final GameModel gameModel;
+    private JCheckBoxMenuItem createLeft, createRight, editPoints;
+    private JMenuItem switchStart, deletePoint, newTrack, saveTrack;
     private TrackMenuLabels trackMenuLabels;
 
-    public TrackMenu(TrackBuilder model) {
-        super();
-        this.builder = model;
-        this.builder.addPropertyChangeListener(this);
+    public TrackMenu(GameModel model) {
+        this.gameModel = model;
+        this.gameModel.addPropertyChangeListener(this);
 
-        trackMenuLabels = new TrackMenuLabels(builder.getModel().getLanguage());
-
+        trackMenuLabels = new TrackMenuLabels(gameModel.getLanguage());
         setText(trackMenuLabels.getValue(TrackMenuLabels.TITLE));
 
+        init();
+    }
+
+    private void init() {
         createLeft = new JCheckBoxMenuItem(trackMenuLabels.getValue(TrackMenuLabels.BUILD_LEFT));
         createLeft.setFont(TopMenuBar.MENU_FONT);
         createLeft.setSelected(true);
         createLeft.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent evt) {
-                builder.startBuild(Track.LEFT);
+                gameModel.getBuilder().startBuild(Track.LEFT);
             }
         });
         createRight = new JCheckBoxMenuItem(trackMenuLabels.getValue(TrackMenuLabels.BUILD_RIGHT));
@@ -53,7 +56,7 @@ public final class TrackMenu extends JMenu implements PropertyChangeListener {
         createRight.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent evt) {
-                builder.startBuild(Track.RIGHT);
+                gameModel.getBuilder().startBuild(Track.RIGHT);
             }
         });
         editPoints = new JCheckBoxMenuItem(trackMenuLabels.getValue(TrackMenuLabels.EDIT));
@@ -61,9 +64,8 @@ public final class TrackMenu extends JMenu implements PropertyChangeListener {
         editPoints.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent evt) {
-                createRight.setSelected(false);//odskrtne tlacitko pro tvorbu prave krajnice
-                createLeft.setSelected(false);//odskrtne tlacitko pro tvorbu leve krajnice
-                builder.editPoints();
+                gameModel.getBuilder().clearTrackInside();
+                gameModel.setStage(GameModel.EDIT_PRESS);
             }
         });
 
@@ -77,7 +79,7 @@ public final class TrackMenu extends JMenu implements PropertyChangeListener {
         deletePoint.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent evt) {
-                deletePoints();
+                deletePoint();
             }
         });
         switchStart = new JMenuItem(trackMenuLabels.getValue(TrackMenuLabels.REVERSE));
@@ -86,7 +88,7 @@ public final class TrackMenu extends JMenu implements PropertyChangeListener {
         switchStart.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent evt) {
-                builder.switchStart();
+                gameModel.switchStart();
                 createLeft.setSelected(true);//zaskrtne tlacitko pro tvorbu leve krajnice
             }
         });
@@ -106,7 +108,7 @@ public final class TrackMenu extends JMenu implements PropertyChangeListener {
             public void actionPerformed(ActionEvent evt) {
                 Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
 
-                SaveTrackWindow saveTrackWindow = new SaveTrackWindow(builder.getModel());
+                SaveTrackWindow saveTrackWindow = new SaveTrackWindow(gameModel);
                 saveTrackWindow.setLocation(dim.width / 2 - saveTrackWindow.getWidth() / 2, dim.height / 2 - saveTrackWindow.getHeight() / 2);
                 saveTrackWindow.setVisible(true);
             }
@@ -122,18 +124,18 @@ public final class TrackMenu extends JMenu implements PropertyChangeListener {
         add(saveTrack);
     }
 
-    private void deletePoints() {
+    private void deletePoint() {
         if (createLeft.isSelected()) {
-            builder.deletePoint(Track.LEFT, Track.RIGHT);
+            gameModel.getBuilder().deletePoint(Track.LEFT, Track.RIGHT);
         } else if (createRight.isSelected()) {
-            builder.deletePoint(Track.RIGHT, Track.LEFT);
+            gameModel.getBuilder().deletePoint(Track.RIGHT, Track.LEFT);
         } else {
-            builder.deletePoint(0, 0);
+            gameModel.fireHint(HintLabels.CHOOSE_SIDE);
         }
     }
 
     private void newTrack() {
-        builder.getModel().resetGame();
+        gameModel.resetGame();
         switchStart.setEnabled(false);
         createLeft.setSelected(true);
     }
@@ -153,7 +155,11 @@ public final class TrackMenu extends JMenu implements PropertyChangeListener {
     public void propertyChange(PropertyChangeEvent evt) {
         switch (evt.getPropertyName()) {
             case "startDraw":
+            case "leftSide":
                 createLeft.setSelected(true);
+                break;
+            case "rightSide":
+                createRight.setSelected(true);
                 break;
             case "startGame":
                 this.setEnabled(false);
@@ -165,7 +171,7 @@ public final class TrackMenu extends JMenu implements PropertyChangeListener {
                 switchStart.setEnabled((boolean) evt.getNewValue());
                 break;
             case "language":
-                trackMenuLabels = new TrackMenuLabels(builder.getModel().getLanguage());
+                trackMenuLabels = new TrackMenuLabels(gameModel.getLanguage());
                 changeLanguage();
                 break;
         }

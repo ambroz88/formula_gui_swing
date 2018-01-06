@@ -17,7 +17,6 @@ import com.ambi.formula.gamemodel.datamodel.Formula;
 import com.ambi.formula.gamemodel.datamodel.Point;
 import com.ambi.formula.gamemodel.datamodel.Polyline;
 import com.ambi.formula.gamemodel.datamodel.Track;
-import com.ambi.formula.gamemodel.datamodel.Turns;
 import com.ambi.formula.gamemodel.utils.Calc;
 import com.ambi.formula.gui.utils.Colors;
 
@@ -29,7 +28,6 @@ import com.ambi.formula.gui.utils.Colors;
 public final class Draw extends JPanel implements PropertyChangeListener {
 
     private final GameModel gModel;
-    private final float dash[] = {20, 10, 2, 10};
 
     public Draw(GameModel model) {
         gModel = model;
@@ -54,8 +52,8 @@ public final class Draw extends JPanel implements PropertyChangeListener {
         if (track.isReadyForDraw()) {
             //draw complete track
             g2.setColor(Colors.ROAD_SNOW);
-            int[][] trackPoints = track.getTrack(gModel.getPaper().getGridSize());
-            g2.fillPolygon(trackPoints[0], trackPoints[1], track.getIndex(Track.LEFT) + track.getIndex(Track.RIGHT) + 2);
+            int[][] trackPoints = track.getCoordinates(gModel.getPaper().getGridSize());
+            g2.fillPolygon(trackPoints[0], trackPoints[1], track.getLeft().getLength() + track.getRight().getLength());
         }
         //draw grid:
         g2.setColor(new Color(150, 150, 150));
@@ -65,14 +63,14 @@ public final class Draw extends JPanel implements PropertyChangeListener {
         drawTrack(g2);
         //draw formulas:
         g2.setStroke(new BasicStroke(2));
-        drawFormule(g2, gModel.getTurn().getFormula(1));
-        drawFormule(g2, gModel.getTurn().getFormula(2));
+        drawFormule(g2, gModel.getTurnMaker().getFormula(1));
+        drawFormule(g2, gModel.getTurnMaker().getFormula(2));
         //draw points:
-        int player = gModel.getTurn().getActID();
+        int player = gModel.getTurnMaker().getActID();
         if (player == 0) {
             colorPoints = Color.BLUE;
         } else {
-            colorPoints = new Color(gModel.getTurn().getFormula(player).getColor());
+            colorPoints = new Color(gModel.getTurnMaker().getFormula(player).getColor());
         }
         g2.setColor(colorPoints);
         if (gModel.getStage() > GameModel.FIRST_TURN) {
@@ -142,16 +140,14 @@ public final class Draw extends JPanel implements PropertyChangeListener {
     }
 
     private void drawTurns(Graphics g) {
-        Turns turns = gModel.getTurns();
-        for (int i = 0; i < turns.getSize(); i++) {
-            if (turns.getTurn(i).isExist()) {
-                Point actPoint = turns.getTurn(i).getPosition();
-                if (turns.getTurn(i).getType() == 0) {
-                    drawCross(g, actPoint);
-                } else {
-                    drawPoint(g, actPoint);
-                }
-            }
+        List<Point> possibleTurns = gModel.getTurnMaker().getTurns().getPoints();
+        for (Point point : possibleTurns) {
+            drawPoint(g, point);
+        }
+
+        List<Point> crashes = gModel.getTurnMaker().getTurns().getBadPoints();
+        for (Point point : crashes) {
+            drawCross(g, point);
         }
     }
 
@@ -179,25 +175,12 @@ public final class Draw extends JPanel implements PropertyChangeListener {
             drawPolyline(g2, track.getRight().choose(0, track.getIndex(Track.RIGHT)));
         }
 
-        //left parallel barrier:
-        if (gModel.getStage() == 1 && track.getParallelLeft().getLength() > 1) {
-            g2.setStroke(new BasicStroke(track.getLeftWidth() - 1, BasicStroke.CAP_ROUND, BasicStroke.JOIN_MITER, 10, dash, 0));
-            g2.setColor(Color.orange);
-            drawPolyline(g2, track.getParallelLeft());
-        }
-        //right parallel barrier:
-        if (gModel.getStage() == 2 && track.getParallelRight().getLength() > 1) {
-            g2.setStroke(new BasicStroke(track.getRightWidth() - 1, BasicStroke.CAP_ROUND, BasicStroke.JOIN_MITER, 10, dash, 0));
-            g2.setColor(Color.orange);
-            drawPolyline(g2, track.getParallelRight());
-        }
-
         //draw start and finish (when track is ready):
         if (track.getLeft().getLength() > 0 && track.getRight().getLength() > 0) {
             g2.setStroke(new BasicStroke(5));
             g2.setColor(Color.PINK);
             drawLine(g2, track.getStart());
-            if (track.getReady()) {
+            if (track.isReady()) {
                 drawLine(g2, track.getFinish());
                 List<Polyline> lines = gModel.getBuilder().getCheckLines();
                 g2.setStroke(new BasicStroke(1));
@@ -231,8 +214,8 @@ public final class Draw extends JPanel implements PropertyChangeListener {
             double arrowAngle = 0.5;//0.5235; //in radians ~ 30°
             double arrowLength = 0.6 * gridSize;
             int formulaLength = form.getLength();
-            if (formulaLength > gModel.getTurn().getLengthHist()) {
-                formulaLength = gModel.getTurn().getLengthHist() + 1;
+            if (formulaLength > gModel.getTurnMaker().getLengthHist()) {
+                formulaLength = gModel.getTurnMaker().getLengthHist() + 1;
             }
             for (int i = form.getLength() - formulaLength; i < form.getLength() - 1; i++) {
                 //start of formula turn

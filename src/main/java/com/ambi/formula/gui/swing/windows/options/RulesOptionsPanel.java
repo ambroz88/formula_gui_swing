@@ -32,7 +32,7 @@ import com.ambi.formula.gui.swing.windows.OptionsWindow;
 public final class RulesOptionsPanel extends JPanel implements PropertyChangeListener {
 
     private final GameModel model;
-    private final ButtonGroup buttonGroup1;
+    private final ButtonGroup buttonGroup;
     private final JRadioButton firstWins;
     private final JRadioButton roundEnd;
     private final JRadioButton collision;
@@ -53,10 +53,10 @@ public final class RulesOptionsPanel extends JPanel implements PropertyChangeLis
         this.roundEnd = new JRadioButton();
         this.collision = new JRadioButton();
 
-        this.buttonGroup1 = new ButtonGroup();
-        buttonGroup1.add(firstWins);
-        buttonGroup1.add(roundEnd);
-        buttonGroup1.add(collision);
+        this.buttonGroup = new ButtonGroup();
+        buttonGroup.add(firstWins);
+        buttonGroup.add(roundEnd);
+        buttonGroup.add(collision);
 
         initComponents();
     }
@@ -75,9 +75,9 @@ public final class RulesOptionsPanel extends JPanel implements PropertyChangeLis
                 comboTurnsItemStateChanged(evt);
             }
         });
-        comboTurns.setSelectedItem(model.getTurn().getTurnsCount());
+        comboTurns.setSelectedItem(model.getTurnMaker().getTurnsCount());
 
-        if (model.getTurn().getFinishType() == MakeTurn.FIRST_WIN) {
+        if (model.getTurnMaker().getFinishType() == MakeTurn.FIRST_WIN) {
             firstWins.setSelected(true);
         }
         firstWins.setText(optionLabels.getValue(OptionsLabels.RULE_FIRST));
@@ -88,7 +88,7 @@ public final class RulesOptionsPanel extends JPanel implements PropertyChangeLis
             }
         });
 
-        if (model.getTurn().getFinishType() == MakeTurn.SECOND_CHANCE) {
+        if (model.getTurnMaker().getFinishType() == MakeTurn.SECOND_CHANCE) {
             roundEnd.setSelected(true);
         }
         roundEnd.setText(optionLabels.getValue(OptionsLabels.RULE_SECOND));
@@ -100,7 +100,7 @@ public final class RulesOptionsPanel extends JPanel implements PropertyChangeLis
         });
 
         collision.setText(optionLabels.getValue(OptionsLabels.RULE_COLISION));
-        if (model.getTurn().getFinishType() == MakeTurn.COLLISION) {
+        if (model.getTurnMaker().getFinishType() == MakeTurn.COLLISION) {
             collision.setSelected(true);
         }
         collision.addActionListener(new ActionListener() {
@@ -149,19 +149,19 @@ public final class RulesOptionsPanel extends JPanel implements PropertyChangeLis
     }
 
     private void firstWinsActionPerformed(ActionEvent evt) {
-        model.getTurn().setFinishType(MakeTurn.FIRST_WIN);
+        model.getTurnMaker().setFinishType(MakeTurn.FIRST_WIN);
     }
 
     private void roundEndActionPerformed(ActionEvent evt) {
-        model.getTurn().setFinishType(MakeTurn.SECOND_CHANCE);
+        model.getTurnMaker().setFinishType(MakeTurn.SECOND_CHANCE);
     }
 
     private void collisionActionPerformed(ActionEvent evt) {
-        model.getTurn().setFinishType(MakeTurn.COLLISION);
+        model.getTurnMaker().setFinishType(MakeTurn.COLLISION);
     }
 
     private void comboTurnsItemStateChanged(ItemEvent evt) {
-        model.getTurn().setTurns(Integer.valueOf(comboTurns.getSelectedItem().toString()));
+        model.getTurnMaker().setTurnsCount(Integer.valueOf(comboTurns.getSelectedItem().toString()));
     }
 
     @Override

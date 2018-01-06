@@ -6,15 +6,15 @@ import java.awt.Rectangle;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
-import javax.swing.JComponent;
 import javax.swing.JViewport;
 
 import com.ambi.formula.gamemodel.GameModel;
+import com.ambi.formula.gui.swing.subcomponents.Draw;
 import com.ambi.formula.gui.utils.Conversions;
 
 /**
- * This class is mouseAdapter for panel Draw. It says what happen when user
- * clicks into to main game panel.
+ * This class is mouseAdapter for panel Draw. It says what happen when user clicks into to main game
+ * panel.
  *
  * @author Jiri Ambroz
  */
@@ -23,11 +23,11 @@ public class MouseDragging extends MouseAdapter {
     private final Cursor defCursor = Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR);
     private final Cursor hndCursor = Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR);
     private final Point pp;
-    private final JComponent image;
+    private final Draw image;
     private final GameModel gModel;
     private boolean edit;
 
-    public MouseDragging(JComponent image, GameModel gModel) {
+    public MouseDragging(Draw image, GameModel gModel) {
         this.image = image;
         this.gModel = gModel;
         pp = new Point();
@@ -61,7 +61,6 @@ public class MouseDragging extends MouseAdapter {
     public void mouseReleased(MouseEvent evt) {
         gModel.windowMouseReleased(Conversions.clickToPoint(evt));
         image.setCursor(defCursor);
-        image.repaint();
     }
 
     @Override

@@ -118,8 +118,8 @@ public final class TracksComponent extends JPanel implements ListSelectionListen
             Track track = TrackIO.trackFromJSON(name, model);
             if (track != null) {
                 model.resetGame();
-                track.setReady(true);
                 model.getBuilder().setTrack(track);
+                model.getBuilder().analyzeTrack();
                 model.loadTrackActions();
             } else {
                 model.fireHint(HintLabels.WRONG_TRACK);

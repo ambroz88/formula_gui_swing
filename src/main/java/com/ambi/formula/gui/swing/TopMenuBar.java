@@ -31,21 +31,21 @@ public final class TopMenuBar extends JMenuBar {
     private OptionsWindow optionsDiag;
     private JMenu language;
 
-    private final GameModel gModel;
+    private final GameModel gameModel;
     private OptionsLabels optionsLabels;
 
     public TopMenuBar(GameModel gModel) {
-        this.gModel = gModel;
-        optionsLabels = new OptionsLabels(this.gModel.getLanguage());
+        this.gameModel = gModel;
+        optionsLabels = new OptionsLabels(this.gameModel.getLanguage());
         initComponents();
     }
 
     private void initComponents() {
-        gModel.setLanguage("EN");
+        gameModel.setLanguage("EN");
 
-        trackMenu = new TrackMenu(gModel.getBuilder());
-        startMenu = new StartMenu(gModel);
-        optionsDiag = new OptionsWindow(gModel);
+        trackMenu = new TrackMenu(gameModel);
+        startMenu = new StartMenu(gameModel);
+        optionsDiag = new OptionsWindow(gameModel);
         optionsMenu = new JMenu() {
             @Override
             public JPopupMenu getPopupMenu() {
@@ -73,14 +73,14 @@ public final class TopMenuBar extends JMenuBar {
         language.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent evt) {
-                if (gModel.getLanguage().equals("CZ")) {
+                if (gameModel.getLanguage().equals("CZ")) {
                     language.setIcon(new ImageIcon(getClass().getClassLoader().getResource("CzechFlag 24x24.png")));
-                    gModel.setLanguage("EN");
+                    gameModel.setLanguage("EN");
                 } else {
                     language.setIcon(new ImageIcon(getClass().getClassLoader().getResource("BritishFlag 24x24.png")));
-                    gModel.setLanguage("CZ");
+                    gameModel.setLanguage("CZ");
                 }
-                optionsLabels = new OptionsLabels(gModel.getLanguage());
+                optionsLabels = new OptionsLabels(gameModel.getLanguage());
                 optionsMenu.setText(optionsLabels.getValue(OptionsLabels.TITLE) + "...");
             }
         });

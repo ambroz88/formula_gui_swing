@@ -29,8 +29,8 @@ public final class StatisticsComponent extends JPanel implements PropertyChangeL
         this.model = model;
         this.model.addPropertyChangeListener(this);
 
-        statisticPanel1 = new StatisticPanel(model.getTurn().getFormula(1), model.getLanguage());
-        statisticPanel2 = new StatisticPanel(model.getTurn().getFormula(2), model.getLanguage());
+        statisticPanel1 = new StatisticPanel(model.getTurnMaker().getFormula(1), model.getLanguage());
+        statisticPanel2 = new StatisticPanel(model.getTurnMaker().getFormula(2), model.getLanguage());
 
         hint = new JLabel("", JLabel.CENTER);
         hint.setFont(new Font("Arial", 0, 14));
