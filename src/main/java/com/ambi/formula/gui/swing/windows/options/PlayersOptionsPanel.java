@@ -25,7 +25,7 @@ import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
 
 import com.ambi.formula.gamemodel.GameModel;
-import com.ambi.formula.gamemodel.MakeTurn;
+import com.ambi.formula.gamemodel.turns.TurnMaker;
 import com.ambi.formula.gamemodel.datamodel.Formula;
 import com.ambi.formula.gamemodel.labels.OptionsLabels;
 import com.ambi.formula.gui.swing.windows.OptionsWindow;
@@ -67,7 +67,7 @@ public final class PlayersOptionsPanel extends JPanel implements PropertyChangeL
 
     private JPanel createTurnsPanel() {
         labelShowTurns.setPreferredSize(new Dimension(110, 25));
-        showTurns.setModel(new DefaultComboBoxModel(new Integer[]{MakeTurn.LENGTH_3, MakeTurn.LENGTH_5, MakeTurn.LENGTH_10, MakeTurn.LENGTH_20, MakeTurn.LENGTH_MAX}));
+        showTurns.setModel(new DefaultComboBoxModel(new Integer[]{TurnMaker.LENGTH_3, TurnMaker.LENGTH_5, TurnMaker.LENGTH_10, TurnMaker.LENGTH_20, TurnMaker.LENGTH_MAX}));
         showTurns.setSelectedItem(this.model.getTurnMaker().getLengthHist());
         showTurns.addItemListener(new ItemListener() {
             @Override
