@@ -77,7 +77,7 @@ public final class RulesOptionsPanel extends JPanel implements PropertyChangeLis
         });
         comboTurns.setSelectedItem(model.getTurnMaker().getTurnsCount());
 
-        if (model.getTurnMaker().getFinishType() == MakeTurn.FIRST_WIN) {
+        if (model.getTurnMaker().getFinishType() == MakeTurn.WIN_FIRST) {
             firstWins.setSelected(true);
         }
         firstWins.setText(optionLabels.getValue(OptionsLabels.RULE_FIRST));
@@ -88,7 +88,7 @@ public final class RulesOptionsPanel extends JPanel implements PropertyChangeLis
             }
         });
 
-        if (model.getTurnMaker().getFinishType() == MakeTurn.SECOND_CHANCE) {
+        if (model.getTurnMaker().getFinishType() == MakeTurn.WIN_LAST_TURN) {
             roundEnd.setSelected(true);
         }
         roundEnd.setText(optionLabels.getValue(OptionsLabels.RULE_SECOND));
@@ -100,7 +100,7 @@ public final class RulesOptionsPanel extends JPanel implements PropertyChangeLis
         });
 
         collision.setText(optionLabels.getValue(OptionsLabels.RULE_COLISION));
-        if (model.getTurnMaker().getFinishType() == MakeTurn.COLLISION) {
+        if (model.getTurnMaker().getFinishType() == MakeTurn.WIN_COLLISION) {
             collision.setSelected(true);
         }
         collision.addActionListener(new ActionListener() {
@@ -149,15 +149,15 @@ public final class RulesOptionsPanel extends JPanel implements PropertyChangeLis
     }
 
     private void firstWinsActionPerformed(ActionEvent evt) {
-        model.getTurnMaker().setFinishType(MakeTurn.FIRST_WIN);
+        model.getTurnMaker().setFinishType(MakeTurn.WIN_FIRST);
     }
 
     private void roundEndActionPerformed(ActionEvent evt) {
-        model.getTurnMaker().setFinishType(MakeTurn.SECOND_CHANCE);
+        model.getTurnMaker().setFinishType(MakeTurn.WIN_LAST_TURN);
     }
 
     private void collisionActionPerformed(ActionEvent evt) {
-        model.getTurnMaker().setFinishType(MakeTurn.COLLISION);
+        model.getTurnMaker().setFinishType(MakeTurn.WIN_COLLISION);
     }
 
     private void comboTurnsItemStateChanged(ItemEvent evt) {

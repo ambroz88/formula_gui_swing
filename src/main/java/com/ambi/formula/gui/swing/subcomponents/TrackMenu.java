@@ -48,7 +48,7 @@ public final class TrackMenu extends JMenu implements PropertyChangeListener {
         createLeft.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent evt) {
-                gameModel.getBuilder().startBuild(Track.LEFT);
+                gameModel.startBuild(Track.LEFT);
             }
         });
         createRight = new JCheckBoxMenuItem(trackMenuLabels.getValue(TrackMenuLabels.BUILD_RIGHT));
@@ -56,7 +56,7 @@ public final class TrackMenu extends JMenu implements PropertyChangeListener {
         createRight.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent evt) {
-                gameModel.getBuilder().startBuild(Track.RIGHT);
+                gameModel.startBuild(Track.RIGHT);
             }
         });
         editPoints = new JCheckBoxMenuItem(trackMenuLabels.getValue(TrackMenuLabels.EDIT));
@@ -64,8 +64,7 @@ public final class TrackMenu extends JMenu implements PropertyChangeListener {
         editPoints.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent evt) {
-                gameModel.getBuilder().clearTrackInside();
-                gameModel.setStage(GameModel.EDIT_PRESS);
+                gameModel.clearTrackInside();
             }
         });
 

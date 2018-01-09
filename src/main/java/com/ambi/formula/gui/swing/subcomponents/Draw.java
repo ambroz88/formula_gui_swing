@@ -83,8 +83,7 @@ public final class Draw extends JPanel implements PropertyChangeListener {
     }
 
     /**
-     * It draws crosses in all points of the track - just in modification stage
-     * of the game.
+     * It draws crosses in all points of the track - just in modification stage of the game.
      *
      * @param g2 graphics
      */
@@ -140,12 +139,12 @@ public final class Draw extends JPanel implements PropertyChangeListener {
     }
 
     private void drawTurns(Graphics g) {
-        List<Point> possibleTurns = gModel.getTurnMaker().getTurns().getPoints();
+        List<Point> possibleTurns = gModel.getTurnMaker().getTurns().getFreePoints();
         for (Point point : possibleTurns) {
             drawPoint(g, point);
         }
 
-        List<Point> crashes = gModel.getTurnMaker().getTurns().getBadPoints();
+        List<Point> crashes = gModel.getTurnMaker().getTurns().getCollisionPoints();
         for (Point point : crashes) {
             drawCross(g, point);
         }
@@ -176,13 +175,13 @@ public final class Draw extends JPanel implements PropertyChangeListener {
         }
 
         //draw start and finish (when track is ready):
-        if (track.getLeft().getLength() > 0 && track.getRight().getLength() > 0) {
+        if (track.getStart() != null) {
             g2.setStroke(new BasicStroke(5));
             g2.setColor(Color.PINK);
             drawLine(g2, track.getStart());
             if (track.isReady()) {
                 drawLine(g2, track.getFinish());
-                List<Polyline> lines = gModel.getBuilder().getCheckLines();
+                List<Polyline> lines = gModel.getAnalyzer().getCheckLines();
                 g2.setStroke(new BasicStroke(1));
                 for (Polyline line : lines) {
                     drawLine(g2, line);
@@ -208,7 +207,7 @@ public final class Draw extends JPanel implements PropertyChangeListener {
     }
 
     private void drawFormule(Graphics2D g, Formula form) {
-        if (form.getLength() > 0) {
+        if (!form.isEmpty()) {
             int gridSize = gModel.getPaper().getGridSize();
             g.setColor(new Color(form.getColor()));
             double arrowAngle = 0.5;//0.5235; //in radians ~ 30°
@@ -240,6 +239,7 @@ public final class Draw extends JPanel implements PropertyChangeListener {
     private void updateSize() {
         this.setPreferredSize(new Dimension(gModel.getPaper().getWidth() * gModel.getPaper().getGridSize(), gModel.getPaper().getHeight() * gModel.getPaper().getGridSize()));
         revalidate();
+        repaint();
     }
 
     @Override

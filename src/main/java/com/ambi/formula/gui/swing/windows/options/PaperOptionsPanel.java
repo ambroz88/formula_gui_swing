@@ -125,13 +125,20 @@ public final class PaperOptionsPanel extends JPanel implements PropertyChangeLis
 
     private void paperHeightStateChanged(ChangeEvent evt) {
         if (setModel) {
-            this.paperModel.setHeight(((Number) paperHeight.getValue()).intValue());
+            int newHeght = ((Number) paperHeight.getValue()).intValue();
+            if (model.getBuilder().getTrack().getMaxHeight() < newHeght) {
+                this.paperModel.setHeight(newHeght);
+            }
         }
     }
 
     private void paperWidthStateChanged(ChangeEvent evt) {
         if (setModel) {
-            this.paperModel.setWidth(((Number) paperWidth.getValue()).intValue());
+            int newWidth = ((Number) paperWidth.getValue()).intValue();
+            if (model.getBuilder().getTrack().getMaxWidth() < newWidth) {
+                this.paperModel.setWidth(newWidth);
+
+            }
         }
     }
 
