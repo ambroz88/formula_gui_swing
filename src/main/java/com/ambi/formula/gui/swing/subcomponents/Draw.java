@@ -16,6 +16,7 @@ import com.ambi.formula.gamemodel.GameModel;
 import com.ambi.formula.gamemodel.datamodel.Formula;
 import com.ambi.formula.gamemodel.datamodel.Point;
 import com.ambi.formula.gamemodel.datamodel.Polyline;
+import com.ambi.formula.gamemodel.datamodel.Segment;
 import com.ambi.formula.gamemodel.datamodel.Track;
 import com.ambi.formula.gamemodel.utils.Calc;
 import com.ambi.formula.gui.utils.Colors;
@@ -55,10 +56,16 @@ public final class Draw extends JPanel implements PropertyChangeListener {
             int[][] trackPoints = track.getCoordinates(gModel.getPaper().getGridSize());
             g2.fillPolygon(trackPoints[0], trackPoints[1], track.getLeft().getLength() + track.getRight().getLength());
         }
+
         //draw grid:
         g2.setColor(new Color(150, 150, 150));
-        drawLine(g2, gModel.getPaper().getHorizontalLines());
-        drawLine(g2, gModel.getPaper().getVerticalLines());
+        for (Segment horizontalLine : gModel.getPaper().getHorizontalLines()) {
+            drawSegment(g2, horizontalLine);
+        }
+        for (Segment verticalLine : gModel.getPaper().getVerticalLines()) {
+            drawSegment(g2, verticalLine);
+        }
+
         //draw barriers of track
         drawTrack(g2);
         //draw formulas:
@@ -178,24 +185,27 @@ public final class Draw extends JPanel implements PropertyChangeListener {
         if (track.getStart() != null) {
             g2.setStroke(new BasicStroke(5));
             g2.setColor(Color.PINK);
-            drawLine(g2, track.getStart());
+            drawSegment(g2, track.getStart());
             if (track.isReady()) {
-                drawLine(g2, track.getFinish());
-                List<Polyline> lines = gModel.getAnalyzer().getCheckLines();
+                drawSegment(g2, track.getFinish());
+                List<Segment> lines = gModel.getAnalyzer().getCheckLines();
                 g2.setStroke(new BasicStroke(1));
-                for (Polyline line : lines) {
-                    drawLine(g2, line);
+                for (int i = 0; i < lines.size(); i++) {
+                    if (i == gModel.getCheckLinesIndex()) {
+                        g2.setStroke(new BasicStroke(2));
+                    } else {
+                        g2.setStroke(new BasicStroke(1));
+                    }
+                    drawSegment(g2, lines.get(i));
                 }
             }
         }
     }
 
-    private void drawLine(Graphics g, Polyline line) {
+    private void drawSegment(Graphics g, Segment line) {
         int gridSize = gModel.getPaper().getGridSize();
-        for (int i = 0; i < line.getLength() - 1; i = i + 2) {
-            g.drawLine(line.getPoint(i).getX() * gridSize, line.getPoint(i).getY() * gridSize,
-                    line.getPoint(i + 1).getX() * gridSize, line.getPoint(i + 1).getY() * gridSize);
-        }
+        g.drawLine(line.getFirst().getX() * gridSize, line.getFirst().getY() * gridSize,
+                line.getLast().getX() * gridSize, line.getLast().getY() * gridSize);
     }
 
     private void drawPolyline(Graphics g, Polyline line) {
