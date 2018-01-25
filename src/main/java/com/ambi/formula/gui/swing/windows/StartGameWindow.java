@@ -68,7 +68,7 @@ public final class StartGameWindow extends JFrame {
             }
         });
 
-        for (int i = 2; i <= this.model.getTurnMaker().getFormulaCount(); i++) {
+        for (int i = 1; i <= this.model.getTurnMaker().getFormulaCount(); i++) {
             add(new PlayerPanel(i));
         }
 
