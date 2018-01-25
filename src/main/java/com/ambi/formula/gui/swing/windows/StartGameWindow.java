@@ -1,123 +1,125 @@
-package com.ambi.formula.gui.swing.windows.options;
+package com.ambi.formula.gui.swing.windows;
 
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
-import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
+import javax.swing.AbstractAction;
+import javax.swing.ActionMap;
 import javax.swing.BorderFactory;
-import javax.swing.DefaultComboBoxModel;
 import javax.swing.GroupLayout;
+import javax.swing.InputMap;
+import javax.swing.JButton;
 import javax.swing.JColorChooser;
 import javax.swing.JComboBox;
+import javax.swing.JComponent;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.KeyStroke;
 import javax.swing.border.LineBorder;
-import javax.swing.border.TitledBorder;
 import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
 
 import com.ambi.formula.gamemodel.GameModel;
 import com.ambi.formula.gamemodel.datamodel.Formula;
+import com.ambi.formula.gamemodel.enums.FormulaType;
 import com.ambi.formula.gamemodel.labels.OptionsLabels;
-import com.ambi.formula.gamemodel.turns.TurnMaker;
-import com.ambi.formula.gui.swing.windows.OptionsWindow;
+import com.ambi.formula.gamemodel.labels.PrepareGameLabels;
 
 /**
  *
  * @author Jiri Ambroz
  */
-public final class PlayersOptionsPanel extends JPanel implements PropertyChangeListener {
+public final class StartGameWindow extends JFrame {
 
     private final GameModel model;
-    private final JLabel labelShowTurns;
-    private final JComboBox showTurns;
+    private final PrepareGameLabels gameLabels;
 
-    private OptionsLabels optionLabels;
-
-    public PlayersOptionsPanel(GameModel gameModel) {
+    public StartGameWindow(GameModel gameModel) {
         this.model = gameModel;
-        this.model.addPropertyChangeListener(this);
-        this.optionLabels = new OptionsLabels(model.getLanguage());
+        gameLabels = new PrepareGameLabels(this.model.getLanguage());
 
-        labelShowTurns = new JLabel(optionLabels.getValue(OptionsLabels.SHOW_TURNS));
-        showTurns = new JComboBox();
+        setTitle(gameLabels.getValue(PrepareGameLabels.TITLE));
+        setLayout(new FlowLayout(FlowLayout.LEFT, 15, 15));
+        setAlwaysOnTop(true);
+        setResizable(false);
+        setPreferredSize(new Dimension(OptionsWindow.OPTIONS_WIDTH, 180));
 
-        setPreferredSize(new Dimension(OptionsWindow.OPTIONS_WIDTH - 40, OptionsWindow.OPTIONS_HEIGHT / 4));
-        setBorder(BorderFactory.createTitledBorder(null, optionLabels.getValue(OptionsLabels.PLAYERS), TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, new Font("Arial", 0, 14))); // NOI18N
-        setLayout(new FlowLayout(FlowLayout.LEFT, 0, 3));
-
-        for (int i = 1; i <= model.getTurnMaker().getFormulaCount(); i++) {
-            add(new PlayerPanel(i));
-        }
-
-        add(createTurnsPanel());
-    }
-
-    private void showTurnsItemStateChanged(ItemEvent evt) {
-        model.getTurnMaker().setLengthHist(showTurns.getSelectedItem());
-    }
-
-    private JPanel createTurnsPanel() {
-        labelShowTurns.setPreferredSize(new Dimension(110, 25));
-        showTurns.setModel(new DefaultComboBoxModel(new Integer[]{TurnMaker.LENGTH_3, TurnMaker.LENGTH_5, TurnMaker.LENGTH_10, TurnMaker.LENGTH_20, TurnMaker.LENGTH_MAX}));
-        showTurns.setSelectedItem(this.model.getTurnMaker().getLengthHist());
-        showTurns.addItemListener(new ItemListener() {
+        // Close the dialog when Esc is pressed
+        String cancelName = "cancel";
+        InputMap inputMap = getRootPane().getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
+        inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), cancelName);
+        ActionMap actionMap = getRootPane().getActionMap();
+        actionMap.put(cancelName, new AbstractAction() {
             @Override
-            public void itemStateChanged(ItemEvent evt) {
-                showTurnsItemStateChanged(evt);
+            public void actionPerformed(ActionEvent e) {
+                dispose();
             }
         });
 
-        JPanel turnsPanel = new JPanel();
-        turnsPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 10, 0));
-        turnsPanel.add(labelShowTurns);
-        turnsPanel.add(showTurns);
-        return turnsPanel;
-    }
-
-    @Override
-    public void propertyChange(PropertyChangeEvent evt) {
-        switch (evt.getPropertyName()) {
-            case "language":
-                optionLabels = new OptionsLabels(model.getLanguage());
-                setBorder(BorderFactory.createTitledBorder(null, optionLabels.getValue(OptionsLabels.PLAYERS), TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, new Font("Arial", 0, 14))); // NOI18N
-                labelShowTurns.setText(optionLabels.getValue(OptionsLabels.SHOW_TURNS));
-                break;
+        for (int i = 2; i <= this.model.getTurnMaker().getFormulaCount(); i++) {
+            add(new PlayerPanel(i));
         }
+
+        JButton start = new JButton(gameLabels.getValue(PrepareGameLabels.START_GAME));
+        start.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent evt) {
+
+                model.prepareGame();
+                dispose();
+            }
+        });
+        add(start);
+        pack();
     }
 
     private class PlayerPanel extends JPanel implements PropertyChangeListener {
 
+        private final JLabel orderLabel;
+        private final JComboBox<String> playerType;
         private final JTextField nameField;
         private final JPanel colorPanel;
-        private final JLabel orderLabel;
         private final Formula formulaModel;
 
         public PlayerPanel(int formulaID) {
             this.formulaModel = model.getTurnMaker().getFormula(formulaID);
             this.formulaModel.addPropertyChangeListener(this);
 
-            nameField = new JTextField();
             orderLabel = new JLabel(formulaID + ".");
+            playerType = new JComboBox<>(new String[]{gameLabels.getValue(FormulaType.Player.toString()),
+                gameLabels.getValue(FormulaType.ComputerEasy.toString()),
+                gameLabels.getValue(FormulaType.ComputerMedium.toString())});
+            playerType.setSelectedItem(gameLabels.getValue(this.formulaModel.getType().toString()));
+            playerType.addItemListener(new ItemListener() {
+                @Override
+                public void itemStateChanged(ItemEvent evt) {
+                    formulaModel.setType(FormulaType.getType(playerType.getSelectedIndex()));
+                }
+            });
+            nameField = new JTextField();
             colorPanel = new JPanel();
 
-            formulaModel.setName(optionLabels.getValue(OptionsLabels.PLAYER) + " " + formulaID);
+            formulaModel.setName(new OptionsLabels(model.getLanguage()).getValue(OptionsLabels.PLAYER) + " " + formulaID);
             formulaModel.setColor(getInitColor(formulaID));
 
             initComponents();
         }
 
         private void initComponents() {
-            setPreferredSize(new Dimension(OptionsWindow.OPTIONS_WIDTH - 60, 30));
-            setLayout(new FlowLayout(FlowLayout.LEFT, 15, 0));
+            setPreferredSize(new Dimension(OptionsWindow.OPTIONS_WIDTH, 30));
+            setLayout(new FlowLayout(FlowLayout.LEFT, 5, 0));
 
             nameField.setText(formulaModel.getName());
             nameField.addCaretListener(new CaretListener() {
@@ -126,7 +128,7 @@ public final class PlayersOptionsPanel extends JPanel implements PropertyChangeL
                     formulaModel.setName(nameField.getText());
                 }
             });
-            nameField.setPreferredSize(new Dimension(this.getPreferredSize().width / 2, 20));
+            nameField.setPreferredSize(new Dimension(this.getPreferredSize().width / 4, 20));
 
             colorPanel.setBackground(new Color(formulaModel.getColor()));
             colorPanel.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0)));
@@ -160,6 +162,7 @@ public final class PlayersOptionsPanel extends JPanel implements PropertyChangeL
             );
 
             add(orderLabel);
+            add(playerType);
             add(nameField);
             add(colorPanel);
         }

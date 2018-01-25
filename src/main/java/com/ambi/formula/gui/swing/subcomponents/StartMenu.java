@@ -1,5 +1,7 @@
 package com.ambi.formula.gui.swing.subcomponents;
 
+import java.awt.Dimension;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
@@ -11,6 +13,7 @@ import javax.swing.JMenuItem;
 import com.ambi.formula.gamemodel.GameModel;
 import com.ambi.formula.gamemodel.labels.StartMenuLabels;
 import com.ambi.formula.gui.swing.TopMenuBar;
+import com.ambi.formula.gui.swing.windows.StartGameWindow;
 
 /**
  *
@@ -19,7 +22,7 @@ import com.ambi.formula.gui.swing.TopMenuBar;
 public final class StartMenu extends JMenu implements PropertyChangeListener {
 
     private final GameModel gModel;
-    private final JMenuItem onePlayer, onePlayerAgain, twoPlayers, twoPlayersAgain, endGame;
+    private final JMenuItem startNewGame, startAgain, endGame;
     private StartMenuLabels startMenuLabels;
 
     public StartMenu(GameModel model) {
@@ -30,45 +33,24 @@ public final class StartMenu extends JMenu implements PropertyChangeListener {
 
         setText(startMenuLabels.getValue(StartMenuLabels.START));
         setEnabled(false);
-        onePlayer = new JMenuItem();
-        onePlayer.setFont(TopMenuBar.MENU_FONT);
-        onePlayer.setText(startMenuLabels.getValue(StartMenuLabels.ONE));
-        onePlayer.addActionListener(new ActionListener() {
+        startNewGame = new JMenuItem();
+        startNewGame.setFont(TopMenuBar.MENU_FONT);
+        startNewGame.setText(startMenuLabels.getValue(StartMenuLabels.START_GAME));
+        startNewGame.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent evt) {
-                onePlayer();
+                startGame();
             }
         });
 
-        onePlayerAgain = new JMenuItem();
-        onePlayerAgain.setFont(TopMenuBar.MENU_FONT);
-        onePlayerAgain.setText(startMenuLabels.getValue(StartMenuLabels.ONE_AGAIN));
-        onePlayerAgain.setVisible(false);
-        onePlayerAgain.addActionListener(new ActionListener() {
+        startAgain = new JMenuItem();
+        startAgain.setFont(TopMenuBar.MENU_FONT);
+        startAgain.setText(startMenuLabels.getValue(StartMenuLabels.START_AGAIN));
+        startAgain.setVisible(false);
+        startAgain.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent evt) {
-                gModel.prepareGame(1);
-            }
-        });
-
-        twoPlayers = new JMenuItem();
-        twoPlayers.setFont(TopMenuBar.MENU_FONT);
-        twoPlayers.setText(startMenuLabels.getValue(StartMenuLabels.TWO));
-        twoPlayers.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent evt) {
-                twoPlayer();
-            }
-        });
-
-        twoPlayersAgain = new JMenuItem();
-        twoPlayersAgain.setFont(TopMenuBar.MENU_FONT);
-        twoPlayersAgain.setText(startMenuLabels.getValue(StartMenuLabels.TWO_AGAIN));
-        twoPlayersAgain.setVisible(false);
-        twoPlayersAgain.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent evt) {
-                gModel.prepareGame(2);
+                gModel.prepareGame();
             }
         });
 
@@ -82,31 +64,24 @@ public final class StartMenu extends JMenu implements PropertyChangeListener {
             }
         });
 
-        add(onePlayer);
-        add(onePlayerAgain);
-        add(twoPlayers);
-        add(twoPlayersAgain);
+        add(startNewGame);
+        add(startAgain);
         add(endGame);
     }
 
-    private void onePlayer() {
-        gModel.prepareGame(1);
-        onePlayerAgain.setVisible(true);
-        onePlayer.setVisible(false);
-    }
+    private void startGame() {
+        StartGameWindow window = new StartGameWindow(gModel);
+        window.setVisible(true);
+        Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+        window.setLocation(dim.width / 2 - window.getWidth() / 2, dim.height / 2 - window.getHeight() / 2);
 
-    private void twoPlayer() {
-        gModel.prepareGame(2);
-        twoPlayersAgain.setVisible(true);
-        twoPlayers.setVisible(false);
+        startAgain.setVisible(true);
     }
 
     private void changeLanguage() {
         setText(startMenuLabels.getValue(StartMenuLabels.START));
-        onePlayer.setText(startMenuLabels.getValue(StartMenuLabels.ONE));
-        onePlayerAgain.setText(startMenuLabels.getValue(StartMenuLabels.ONE_AGAIN));
-        twoPlayers.setText(startMenuLabels.getValue(StartMenuLabels.TWO));
-        twoPlayersAgain.setText(startMenuLabels.getValue(StartMenuLabels.TWO_AGAIN));
+        startNewGame.setText(startMenuLabels.getValue(StartMenuLabels.START_GAME));
+        startAgain.setText(startMenuLabels.getValue(StartMenuLabels.START_AGAIN));
         endGame.setText(startMenuLabels.getValue(StartMenuLabels.QUIT));
     }
 
