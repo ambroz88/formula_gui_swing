@@ -1,10 +1,8 @@
-package com.ambi.formula.gui.utils;
+package com.ambroz.formula.gui.swing.utils;
 
+import com.ambroz.formula.gamemodel.datamodel.Point;
 import java.awt.event.MouseEvent;
-
 import javax.swing.JViewport;
-
-import com.ambi.formula.gamemodel.datamodel.Point;
 
 /**
  *
