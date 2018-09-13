@@ -1,13 +1,13 @@
 package com.ambroz.formula.gui.swing.tools;
 
 import com.ambroz.formula.gamemodel.GameModel;
-import com.ambroz.formula.gui.swing.components.GameComponent;
 import com.ambroz.formula.gui.swing.utils.Conversions;
 import java.awt.Cursor;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import javax.swing.JPanel;
 import javax.swing.JViewport;
 
 /**
@@ -21,11 +21,11 @@ public class MouseDragging extends MouseAdapter {
     private final Cursor defCursor = Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR);
     private final Cursor hndCursor = Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR);
     private final Point pp;
-    private final GameComponent image;
+    private final JPanel image;
     private final GameModel gModel;
     private boolean edit;
 
-    public MouseDragging(GameComponent image, GameModel gModel) {
+    public MouseDragging(JPanel image, GameModel gModel) {
         this.image = image;
         this.gModel = gModel;
         pp = new Point();

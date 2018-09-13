@@ -23,11 +23,11 @@ import javax.swing.border.LineBorder;
  *
  * @author Jiri Ambroz <ambroz88@seznam.cz>
  */
-public class GameComponent extends JPanel implements PropertyChangeListener {
+public class RaceComponent extends JPanel implements PropertyChangeListener {
 
     private final GameModel gameModel;
 
-    public GameComponent(GameModel gModel) {
+    public RaceComponent(GameModel gModel) {
         this.gameModel = gModel;
         gameModel.addPropertyChangeListener(this);
         gameModel.getPaper().addPropertyChangeListener(this);
