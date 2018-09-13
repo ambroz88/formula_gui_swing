@@ -47,7 +47,7 @@ public class RaceComponent extends JPanel implements PropertyChangeListener {
 
         g2.setBackground(back);
         g2.clearRect(0, 0, this.getWidth(), this.getHeight());
-        Track track = gameModel.getTrack();
+        Track track = gameModel.getRaceTrack();
         if (track.isReadyForDraw()) {
             //draw complete track
             g2.setColor(Colors.ROAD_SNOW);
@@ -133,7 +133,7 @@ public class RaceComponent extends JPanel implements PropertyChangeListener {
      * @param g2
      */
     private void drawTrack(Graphics2D g2) {
-        Track track = gameModel.getTrack();
+        Track track = gameModel.getRaceTrack();
         //left barrier:
         if (track.getLeft().getLength() > 1) {
             g2.setStroke(new BasicStroke(track.getLeftWidth()));

@@ -1,18 +1,20 @@
 package com.ambroz.formula.gui.swing.components;
 
-import com.ambroz.formula.gamemodel.GameModel;
-import com.ambroz.formula.gamemodel.labels.OptionsLabels;
 import java.awt.Font;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+
 import javax.swing.ImageIcon;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JPopupMenu;
 
+import com.ambroz.formula.gamemodel.GameModel;
+import com.ambroz.formula.gamemodel.labels.OptionsLabels;
+
 /**
  *
- * @author Jiri Ambroz
+ * @author Jiri Ambroz <ambroz88@seznam.cz>
  */
 public final class TopMenuBar extends JMenuBar {
 
@@ -31,8 +33,6 @@ public final class TopMenuBar extends JMenuBar {
     }
 
     private void initComponents() {
-        gameModel.setLanguage("EN");
-
 //        optionsDiag = new OptionsWindow(gameModel);
         optionsMenu = new JMenu() {
             @Override

@@ -1,54 +1,53 @@
 package com.ambroz.formula.gui.swing;
 
-import com.ambroz.formula.gamemodel.GameModel;
-import com.ambroz.formula.gui.swing.components.RaceComponent;
-import com.ambroz.formula.gui.swing.components.TopMenuBar;
-import com.ambroz.formula.gui.swing.components.TrackBuilderComponent;
-import com.ambroz.formula.gui.swing.components.TracksComponent;
-import com.ambroz.formula.gui.swing.tools.MouseDragging;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
+
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+
+import com.ambroz.formula.gamemodel.GameModel;
+import com.ambroz.formula.gamemodel.track.TrackBuilder;
+import com.ambroz.formula.gui.swing.components.BuilderMenuBar;
+import com.ambroz.formula.gui.swing.components.RaceComponent;
+import com.ambroz.formula.gui.swing.components.TopMenuBar;
+import com.ambroz.formula.gui.swing.components.TrackBuilderComponent;
+import com.ambroz.formula.gui.swing.components.TracksComponent;
+import com.ambroz.formula.gui.swing.components.VerticalLabelUI;
+import com.ambroz.formula.gui.swing.tools.BuilderMouseController;
+import com.ambroz.formula.gui.swing.tools.RaceMouseController;
 
 /**
  * Component that shows main window with track and formulas and toolbar.
  *
- * @author Jiri Ambroz
+ * @author Jiri Ambroz <ambroz88@seznam.cz>
  */
 public final class ApplicationWindow extends JFrame {
 
     private final GameModel gModel;
+    private JTabbedPane tabs;
 
     public ApplicationWindow() {
         setTitle("Formula Race 1.0");
         ImageIcon img = new ImageIcon(getClass().getClassLoader().getResource("Helmet 32x32.png"));
         setIconImage(img.getImage());
         setLayout(new BorderLayout());
-        this.requestFocusInWindow(true);
+        requestFocusInWindow(true);
         setMinimumSize(new Dimension(700, 400));
 
         gModel = new GameModel();
         gModel.setLanguage("EN");
 
-        JPanel leftPanel = new JPanel(new BorderLayout());
-        TopMenuBar topMenu = new TopMenuBar(gModel);
-
-        JScrollPane scrollTrackSelectorPanel = new JScrollPane(new TracksComponent(gModel));
-        scrollTrackSelectorPanel.setPreferredSize(new Dimension(150, 0));
-        leftPanel.add(topMenu, BorderLayout.NORTH);
-        leftPanel.add(scrollTrackSelectorPanel, BorderLayout.CENTER);
-
-        JTabbedPane tabs = new JTabbedPane(JTabbedPane.TOP);
-        JScrollPane scrollDrawPanel = createDrawPanel();
-        JScrollPane scrollTrackBuilderPanel = createTrackBuilderPanel();
-        tabs.addTab("Game", scrollDrawPanel);
-        tabs.addTab("Build Track", scrollTrackBuilderPanel);
+        JPanel leftPanel = initLeftPanel();
+        initTabs();
 
         add(leftPanel, BorderLayout.WEST);
         add(tabs, BorderLayout.CENTER);
@@ -65,26 +64,71 @@ public final class ApplicationWindow extends JFrame {
         gameWindow.setSize(new Dimension(width, height));
     }
 
+    private JPanel initLeftPanel() {
+        JPanel leftPanel = new JPanel(new BorderLayout());
+        TopMenuBar topMenu = new TopMenuBar(gModel);
+        leftPanel.add(topMenu, BorderLayout.NORTH);
+
+        JScrollPane scrollTrackSelectorPanel = new JScrollPane(new TracksComponent(gModel));
+        scrollTrackSelectorPanel.setPreferredSize(new Dimension(150, 0));
+        leftPanel.add(scrollTrackSelectorPanel, BorderLayout.CENTER);
+
+        return leftPanel;
+    }
+
+    private void initTabs() {
+        tabs = new JTabbedPane(JTabbedPane.LEFT);
+
+        tabs.addChangeListener(new ChangeListener() {
+            @Override
+            public void stateChanged(ChangeEvent e) {
+                int tabIndex = tabs.getSelectedIndex();
+                if (tabIndex == 0) {
+                    gModel.setStage(GameModel.FIRST_TURN);
+                } else if (tabIndex == 1) {
+                    gModel.getTrackBuilder().setStage(TrackBuilder.BUILD_LEFT);
+                }
+            }
+        });
+        JScrollPane scrollDrawPanel = createDrawPanel();
+        JPanel trackBuilderPanel = createTrackBuilderPanel();
+        tabs.addTab(null, scrollDrawPanel);
+        tabs.addTab(null, trackBuilderPanel);
+
+        tabs.setTabComponentAt(0, createVerticalLabel(" Game "));
+        tabs.setTabComponentAt(1, createVerticalLabel(" Build Track "));
+    }
+
+    private JLabel createVerticalLabel(String title) {
+        JLabel labelGame = new JLabel(title);
+        labelGame.setUI(new VerticalLabelUI(false));
+        return labelGame;
+    }
+
     private JScrollPane createDrawPanel() {
         RaceComponent drawPanel = new RaceComponent(gModel);
 
         JScrollPane scroll = new JScrollPane(drawPanel);
-        MouseDragging scrollListener = new MouseDragging(drawPanel, gModel);
+        RaceMouseController scrollListener = new RaceMouseController(drawPanel, gModel);
         scroll.getViewport().addMouseMotionListener(scrollListener);
         scroll.getViewport().addMouseListener(scrollListener);
 
         return scroll;
     }
 
-    private JScrollPane createTrackBuilderPanel() {
-        TrackBuilderComponent drawPanel = new TrackBuilderComponent(gModel);
+    private JPanel createTrackBuilderPanel() {
+        BuilderMenuBar builderBar = new BuilderMenuBar(gModel.getTrackBuilder());
+        TrackBuilderComponent drawPanel = new TrackBuilderComponent(gModel.getTrackBuilder());
 
         JScrollPane scroll = new JScrollPane(drawPanel);
-        MouseDragging scrollListener = new MouseDragging(drawPanel, gModel);
+        BuilderMouseController scrollListener = new BuilderMouseController(drawPanel, gModel.getTrackBuilder());
         scroll.getViewport().addMouseMotionListener(scrollListener);
         scroll.getViewport().addMouseListener(scrollListener);
 
-        return scroll;
+        JPanel builderPanel = new JPanel(new BorderLayout());
+        builderPanel.add(builderBar, BorderLayout.NORTH);
+        builderPanel.add(scroll, BorderLayout.CENTER);
+        return builderPanel;
     }
 
 }

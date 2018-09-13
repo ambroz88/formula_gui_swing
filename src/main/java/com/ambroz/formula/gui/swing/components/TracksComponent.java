@@ -1,9 +1,5 @@
 package com.ambroz.formula.gui.swing.components;
 
-import com.ambroz.formula.gamemodel.GameModel;
-import com.ambroz.formula.gamemodel.datamodel.Track;
-import com.ambroz.formula.gamemodel.utils.TrackIO;
-import com.ambroz.formula.gui.swing.windows.ConfirmWindow;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -14,6 +10,7 @@ import java.awt.event.KeyListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.List;
+
 import javax.swing.DefaultListModel;
 import javax.swing.JLabel;
 import javax.swing.JList;
@@ -22,9 +19,14 @@ import javax.swing.border.LineBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import com.ambroz.formula.gamemodel.GameModel;
+import com.ambroz.formula.gamemodel.datamodel.Track;
+import com.ambroz.formula.gamemodel.utils.TrackIO;
+import com.ambroz.formula.gui.swing.windows.ConfirmWindow;
+
 /**
  *
- * @author Jiri Ambroz
+ * @author Jiri Ambroz <ambroz88@seznam.cz>
  */
 public final class TracksComponent extends JPanel implements ListSelectionListener, PropertyChangeListener {
 
@@ -95,7 +97,7 @@ public final class TracksComponent extends JPanel implements ListSelectionListen
         if (this.model != null) {
             if (e.getFirstIndex() != index) {
                 index = e.getFirstIndex();
-                if (this.model.getStage() > GameModel.EDIT_RELEASE) {
+                if (this.model.getStage() > GameModel.FIRST_TURN) {
                     ConfirmWindow conf = new ConfirmWindow(this.model);
                     Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
                     conf.setLocation(dim.width / 2 - conf.getWidth() / 2, dim.height / 2 - conf.getHeight() / 2);
