@@ -1,13 +1,12 @@
 package com.ambroz.formula.gui.swing.windows;
 
-import com.ambroz.formula.gamemodel.GameModel;
-import com.ambroz.formula.gamemodel.labels.DialogLabels;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+
 import javax.swing.AbstractAction;
 import javax.swing.ActionMap;
 import javax.swing.InputMap;
@@ -22,9 +21,11 @@ import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 
+import com.ambroz.formula.gamemodel.GameModel;
+import com.ambroz.formula.gamemodel.labels.DialogLabels;
+
 /**
- * This dialog serves for asking user if he wants to load new Track even if the
- * race still running.
+ * This dialog serves for asking user if he wants to load new Track even if the race still running.
  *
  * @author Jiri Ambroz
  */

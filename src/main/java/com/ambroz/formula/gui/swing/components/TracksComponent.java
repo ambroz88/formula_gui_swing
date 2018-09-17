@@ -41,6 +41,7 @@ public final class TracksComponent extends JPanel implements ListSelectionListen
 
         this.model = gameModel;
         this.model.addPropertyChangeListener(this);
+        this.model.getTrackBuilder().addPropertyChangeListener(this);
         index = -1;
 
         trackLabel = new JLabel("     Available Tracks:     ");

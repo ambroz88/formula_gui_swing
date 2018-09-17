@@ -1,7 +1,9 @@
 package com.ambroz.formula.gui.swing.components;
 
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
@@ -14,6 +16,7 @@ import javax.swing.JSeparator;
 import com.ambroz.formula.gamemodel.datamodel.Track;
 import com.ambroz.formula.gamemodel.labels.TrackMenuLabels;
 import com.ambroz.formula.gamemodel.track.TrackBuilder;
+import com.ambroz.formula.gui.swing.windows.SaveTrackWindow;
 
 /**
  *
@@ -88,6 +91,15 @@ public final class BuilderMenuBar extends JMenuBar implements PropertyChangeList
             public void actionPerformed(ActionEvent evt) {
                 builder.setStage(TrackBuilder.BUILD_LEFT);
                 builder.switchStart();
+                builder.generateEndPoints(Track.LEFT);
+                builder.repaintScene();
+            }
+        });
+
+        deletePoint.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent evt) {
+                builder.deletePoint();
                 builder.repaintScene();
             }
         });
@@ -99,6 +111,18 @@ public final class BuilderMenuBar extends JMenuBar implements PropertyChangeList
                 builder.repaintScene();
             }
         });
+
+        saveTrack.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent evt) {
+                Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+
+                SaveTrackWindow saveTrackWindow = new SaveTrackWindow(builder);
+                saveTrackWindow.setLocation(dim.width / 2 - saveTrackWindow.getWidth() / 2, dim.height / 2 - saveTrackWindow.getHeight() / 2);
+                saveTrackWindow.setVisible(true);
+            }
+        });
+
     }
 
     private void changeLanguage() {

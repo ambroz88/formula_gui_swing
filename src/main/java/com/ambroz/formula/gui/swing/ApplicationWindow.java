@@ -15,7 +15,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import com.ambroz.formula.gamemodel.GameModel;
-import com.ambroz.formula.gamemodel.track.TrackBuilder;
+import com.ambroz.formula.gamemodel.datamodel.Track;
 import com.ambroz.formula.gui.swing.components.BuilderMenuBar;
 import com.ambroz.formula.gui.swing.components.RaceComponent;
 import com.ambroz.formula.gui.swing.components.TopMenuBar;
@@ -47,9 +47,9 @@ public final class ApplicationWindow extends JFrame {
         gModel.setLanguage("EN");
 
         JPanel leftPanel = initLeftPanel();
-        initTabs();
-
         add(leftPanel, BorderLayout.WEST);
+
+        initTabs();
         add(tabs, BorderLayout.CENTER);
     }
 
@@ -86,7 +86,7 @@ public final class ApplicationWindow extends JFrame {
                 if (tabIndex == 0) {
                     gModel.setStage(GameModel.FIRST_TURN);
                 } else if (tabIndex == 1) {
-                    gModel.getTrackBuilder().setStage(TrackBuilder.BUILD_LEFT);
+                    gModel.getTrackBuilder().startBuild(Track.LEFT);
                 }
             }
         });
@@ -95,7 +95,7 @@ public final class ApplicationWindow extends JFrame {
         tabs.addTab(null, scrollDrawPanel);
         tabs.addTab(null, trackBuilderPanel);
 
-        tabs.setTabComponentAt(0, createVerticalLabel(" Game "));
+        tabs.setTabComponentAt(0, createVerticalLabel(" Play Race "));
         tabs.setTabComponentAt(1, createVerticalLabel(" Build Track "));
     }
 
