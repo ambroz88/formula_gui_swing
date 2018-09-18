@@ -9,7 +9,7 @@ import java.awt.event.MouseEvent;
 import javax.swing.JPanel;
 import javax.swing.JViewport;
 
-import com.ambroz.formula.gamemodel.GameModel;
+import com.ambroz.formula.gamemodel.race.RaceModel;
 import com.ambroz.formula.gui.swing.utils.Conversions;
 
 /**
@@ -24,9 +24,9 @@ public class RaceMouseController extends MouseAdapter {
     private final Cursor hndCursor = Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR);
     private final Point pp;
     private final JPanel image;
-    private final GameModel gModel;
+    private final RaceModel gModel;
 
-    public RaceMouseController(JPanel image, GameModel gModel) {
+    public RaceMouseController(JPanel image, RaceModel gModel) {
         this.image = image;
         this.gModel = gModel;
         pp = new Point();

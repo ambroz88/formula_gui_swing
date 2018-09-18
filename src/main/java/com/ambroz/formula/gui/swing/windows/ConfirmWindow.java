@@ -21,7 +21,7 @@ import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 
-import com.ambroz.formula.gamemodel.GameModel;
+import com.ambroz.formula.gamemodel.race.RaceModel;
 import com.ambroz.formula.gamemodel.labels.DialogLabels;
 
 /**
@@ -39,12 +39,12 @@ public final class ConfirmWindow extends JDialog {
      * A return status code - returned if OK button has been pressed
      */
     public static final int RET_YES = 1;
-    private final GameModel model;
+    private final RaceModel model;
     private final DialogLabels dialogLabels;
     private JTextArea hintLabel;
     private JButton noButton, yesButton;
 
-    public ConfirmWindow(GameModel model) {
+    public ConfirmWindow(RaceModel model) {
         super();
         this.model = model;
         dialogLabels = new DialogLabels(this.model.getLanguage());

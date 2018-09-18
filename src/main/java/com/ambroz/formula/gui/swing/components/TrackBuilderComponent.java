@@ -15,7 +15,7 @@ import com.ambroz.formula.gamemodel.datamodel.Paper;
 import com.ambroz.formula.gamemodel.datamodel.Point;
 import com.ambroz.formula.gamemodel.datamodel.Polyline;
 import com.ambroz.formula.gamemodel.datamodel.Segment;
-import com.ambroz.formula.gamemodel.datamodel.Track;
+import com.ambroz.formula.gamemodel.track.Track;
 import com.ambroz.formula.gamemodel.track.TrackBuilder;
 import com.ambroz.formula.gui.swing.utils.Colors;
 

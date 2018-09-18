@@ -13,7 +13,7 @@ import javax.swing.JButton;
 import javax.swing.JMenuBar;
 import javax.swing.JSeparator;
 
-import com.ambroz.formula.gamemodel.datamodel.Track;
+import com.ambroz.formula.gamemodel.track.Track;
 import com.ambroz.formula.gamemodel.labels.TrackMenuLabels;
 import com.ambroz.formula.gamemodel.track.TrackBuilder;
 import com.ambroz.formula.gui.swing.windows.SaveTrackWindow;

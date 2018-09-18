@@ -14,8 +14,10 @@ import javax.swing.JTabbedPane;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import com.ambroz.formula.gamemodel.GameModel;
-import com.ambroz.formula.gamemodel.datamodel.Track;
+import com.ambroz.formula.gamemodel.datamodel.Paper;
+import com.ambroz.formula.gamemodel.race.RaceModel;
+import com.ambroz.formula.gamemodel.track.Track;
+import com.ambroz.formula.gamemodel.track.TrackBuilder;
 import com.ambroz.formula.gui.swing.components.BuilderMenuBar;
 import com.ambroz.formula.gui.swing.components.RaceComponent;
 import com.ambroz.formula.gui.swing.components.TopMenuBar;
@@ -32,7 +34,9 @@ import com.ambroz.formula.gui.swing.tools.RaceMouseController;
  */
 public final class ApplicationWindow extends JFrame {
 
-    private final GameModel gModel;
+    private final RaceModel raceModel;
+    private final TrackBuilder builder;
+    private TracksComponent trackList;
     private JTabbedPane tabs;
 
     public ApplicationWindow() {
@@ -43,8 +47,11 @@ public final class ApplicationWindow extends JFrame {
         requestFocusInWindow(true);
         setMinimumSize(new Dimension(700, 400));
 
-        gModel = new GameModel();
-        gModel.setLanguage("EN");
+        Paper paper = new Paper();
+        raceModel = new RaceModel(paper);
+        raceModel.setLanguage("EN");
+        builder = new TrackBuilder();
+        builder.setLanguage("EN");
 
         JPanel leftPanel = initLeftPanel();
         add(leftPanel, BorderLayout.WEST);
@@ -66,13 +73,14 @@ public final class ApplicationWindow extends JFrame {
 
     private JPanel initLeftPanel() {
         JPanel leftPanel = new JPanel(new BorderLayout());
-        TopMenuBar topMenu = new TopMenuBar(gModel);
+
+        TopMenuBar topMenu = new TopMenuBar(raceModel, builder);
+        trackList = new TracksComponent(raceModel, builder);
+        JScrollPane trackSelectorPanel = new JScrollPane(trackList);
+        trackSelectorPanel.setPreferredSize(new Dimension(150, 0));
+
         leftPanel.add(topMenu, BorderLayout.NORTH);
-
-        JScrollPane scrollTrackSelectorPanel = new JScrollPane(new TracksComponent(gModel));
-        scrollTrackSelectorPanel.setPreferredSize(new Dimension(150, 0));
-        leftPanel.add(scrollTrackSelectorPanel, BorderLayout.CENTER);
-
+        leftPanel.add(trackSelectorPanel, BorderLayout.CENTER);
         return leftPanel;
     }
 
@@ -84,9 +92,11 @@ public final class ApplicationWindow extends JFrame {
             public void stateChanged(ChangeEvent e) {
                 int tabIndex = tabs.getSelectedIndex();
                 if (tabIndex == 0) {
-                    gModel.setStage(GameModel.FIRST_TURN);
+                    trackList.setActiveTab(TracksComponent.RACE);
+                    raceModel.setStage(RaceModel.FIRST_TURN);
                 } else if (tabIndex == 1) {
-                    gModel.getTrackBuilder().startBuild(Track.LEFT);
+                    trackList.setActiveTab(TracksComponent.BUILD);
+                    builder.startBuild(Track.LEFT);
                 }
             }
         });
@@ -106,10 +116,10 @@ public final class ApplicationWindow extends JFrame {
     }
 
     private JScrollPane createDrawPanel() {
-        RaceComponent drawPanel = new RaceComponent(gModel);
+        RaceComponent drawPanel = new RaceComponent(raceModel);
 
         JScrollPane scroll = new JScrollPane(drawPanel);
-        RaceMouseController scrollListener = new RaceMouseController(drawPanel, gModel);
+        RaceMouseController scrollListener = new RaceMouseController(drawPanel, raceModel);
         scroll.getViewport().addMouseMotionListener(scrollListener);
         scroll.getViewport().addMouseListener(scrollListener);
 
@@ -117,11 +127,11 @@ public final class ApplicationWindow extends JFrame {
     }
 
     private JPanel createTrackBuilderPanel() {
-        BuilderMenuBar builderBar = new BuilderMenuBar(gModel.getTrackBuilder());
-        TrackBuilderComponent drawPanel = new TrackBuilderComponent(gModel.getTrackBuilder());
+        BuilderMenuBar builderBar = new BuilderMenuBar(builder);
+        TrackBuilderComponent drawPanel = new TrackBuilderComponent(builder);
 
         JScrollPane scroll = new JScrollPane(drawPanel);
-        BuilderMouseController scrollListener = new BuilderMouseController(drawPanel, gModel.getTrackBuilder());
+        BuilderMouseController scrollListener = new BuilderMouseController(drawPanel, builder);
         scroll.getViewport().addMouseMotionListener(scrollListener);
         scroll.getViewport().addMouseListener(scrollListener);
 

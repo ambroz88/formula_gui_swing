@@ -19,8 +19,9 @@ import javax.swing.border.LineBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-import com.ambroz.formula.gamemodel.GameModel;
-import com.ambroz.formula.gamemodel.datamodel.Track;
+import com.ambroz.formula.gamemodel.race.RaceModel;
+import com.ambroz.formula.gamemodel.track.Track;
+import com.ambroz.formula.gamemodel.track.TrackBuilder;
 import com.ambroz.formula.gamemodel.utils.TrackIO;
 import com.ambroz.formula.gui.swing.windows.ConfirmWindow;
 
@@ -30,18 +31,22 @@ import com.ambroz.formula.gui.swing.windows.ConfirmWindow;
  */
 public final class TracksComponent extends JPanel implements ListSelectionListener, PropertyChangeListener {
 
-    private final GameModel model;
+    public static final int BUILD = 0;
+    public static final int RACE = 1;
+
+    private final RaceModel raceModel;
     private final JLabel trackLabel;
     private JList<String> list;
     private int index;
+    private int activeTab;
 
-    public TracksComponent(GameModel gameModel) {
+    public TracksComponent(RaceModel gameModel, TrackBuilder trackBuilder) {
         setLayout(new BorderLayout());
         setBorder(new LineBorder(Color.BLACK, 1));
 
-        this.model = gameModel;
-        this.model.addPropertyChangeListener(this);
-        this.model.getTrackBuilder().addPropertyChangeListener(this);
+        this.raceModel = gameModel;
+        this.raceModel.addPropertyChangeListener(this);
+        trackBuilder.addPropertyChangeListener(this);
         index = -1;
 
         trackLabel = new JLabel("     Available Tracks:     ");
@@ -95,16 +100,20 @@ public final class TracksComponent extends JPanel implements ListSelectionListen
 
     @Override
     public void valueChanged(ListSelectionEvent e) {
-        if (this.model != null) {
+        if (this.raceModel != null) {
             if (e.getFirstIndex() != index) {
                 index = e.getFirstIndex();
-                if (this.model.getStage() > GameModel.FIRST_TURN) {
-                    ConfirmWindow conf = new ConfirmWindow(this.model);
-                    Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
-                    conf.setLocation(dim.width / 2 - conf.getWidth() / 2, dim.height / 2 - conf.getHeight() / 2);
-                    conf.setVisible(true);
-                } else {
-                    loadSelectedTrack();
+                if (getActiveTab() == RACE) {
+                    if (this.raceModel.getStage() > RaceModel.FIRST_TURN) {
+                        ConfirmWindow conf = new ConfirmWindow(this.raceModel);
+                        Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+                        conf.setLocation(dim.width / 2 - conf.getWidth() / 2, dim.height / 2 - conf.getHeight() / 2);
+                        conf.setVisible(true);
+                    } else {
+                        loadSelectedTrack();
+                    }
+                } else if (getActiveTab() == BUILD) {
+
                 }
             } else {
                 index = -1;
@@ -117,7 +126,7 @@ public final class TracksComponent extends JPanel implements ListSelectionListen
         if (name != null) {
             Track track = TrackIO.trackFromJSON(name);
             if (track != null) {
-                model.prepareGame(track);
+                raceModel.prepareGame(track);
             } else {
 //                model.fireHint(HintLabels.WRONG_TRACK);
             }
@@ -133,6 +142,14 @@ public final class TracksComponent extends JPanel implements ListSelectionListen
         } else if (evt.getPropertyName().equals("loadTrack")) {
             loadSelectedTrack();
         }
+    }
+
+    public int getActiveTab() {
+        return activeTab;
+    }
+
+    public void setActiveTab(int activeTab) {
+        this.activeTab = activeTab;
     }
 
 }

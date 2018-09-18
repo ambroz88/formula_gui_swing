@@ -1,13 +1,5 @@
 package com.ambroz.formula.gui.swing.components;
 
-import com.ambroz.formula.gamemodel.GameModel;
-import com.ambroz.formula.gamemodel.datamodel.Formula;
-import com.ambroz.formula.gamemodel.datamodel.Point;
-import com.ambroz.formula.gamemodel.datamodel.Polyline;
-import com.ambroz.formula.gamemodel.datamodel.Segment;
-import com.ambroz.formula.gamemodel.datamodel.Track;
-import com.ambroz.formula.gamemodel.utils.Calc;
-import com.ambroz.formula.gui.swing.utils.Colors;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -16,8 +8,18 @@ import java.awt.Graphics2D;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.List;
+
 import javax.swing.JPanel;
 import javax.swing.border.LineBorder;
+
+import com.ambroz.formula.gamemodel.datamodel.Point;
+import com.ambroz.formula.gamemodel.datamodel.Polyline;
+import com.ambroz.formula.gamemodel.datamodel.Segment;
+import com.ambroz.formula.gamemodel.race.Formula;
+import com.ambroz.formula.gamemodel.race.RaceModel;
+import com.ambroz.formula.gamemodel.track.Track;
+import com.ambroz.formula.gamemodel.utils.Calc;
+import com.ambroz.formula.gui.swing.utils.Colors;
 
 /**
  *
@@ -25,9 +27,9 @@ import javax.swing.border.LineBorder;
  */
 public class RaceComponent extends JPanel implements PropertyChangeListener {
 
-    private final GameModel gameModel;
+    private final RaceModel gameModel;
 
-    public RaceComponent(GameModel gModel) {
+    public RaceComponent(RaceModel gModel) {
         this.gameModel = gModel;
         gameModel.addPropertyChangeListener(this);
         gameModel.getPaper().addPropertyChangeListener(this);
@@ -39,7 +41,7 @@ public class RaceComponent extends JPanel implements PropertyChangeListener {
     public void paintComponent(Graphics g) {
         Graphics2D g2 = (Graphics2D) g;
         Color back, colorPoints;
-        if (gameModel.getStage() < GameModel.FIRST_TURN) {
+        if (gameModel.getStage() < RaceModel.FIRST_TURN) {
             back = Color.white;
         } else {
             back = Colors.GAME_SAND;
@@ -47,7 +49,7 @@ public class RaceComponent extends JPanel implements PropertyChangeListener {
 
         g2.setBackground(back);
         g2.clearRect(0, 0, this.getWidth(), this.getHeight());
-        Track track = gameModel.getRaceTrack();
+        Track track = gameModel.getTrack();
         if (track.isReadyForDraw()) {
             //draw complete track
             g2.setColor(Colors.ROAD_SNOW);
@@ -75,7 +77,7 @@ public class RaceComponent extends JPanel implements PropertyChangeListener {
             //draw points:
             colorPoints = new Color(gameModel.getTurnMaker().getFormula(1).getColor());
             g2.setColor(colorPoints);
-            if (gameModel.getStage() >= GameModel.FIRST_TURN) {
+            if (gameModel.getStage() >= RaceModel.FIRST_TURN) {
                 drawTurns(g2);
             }
         }
@@ -133,7 +135,7 @@ public class RaceComponent extends JPanel implements PropertyChangeListener {
      * @param g2
      */
     private void drawTrack(Graphics2D g2) {
-        Track track = gameModel.getRaceTrack();
+        Track track = gameModel.getTrack();
         //left barrier:
         if (track.getLeft().getLength() > 1) {
             g2.setStroke(new BasicStroke(track.getLeftWidth()));
@@ -207,7 +209,8 @@ public class RaceComponent extends JPanel implements PropertyChangeListener {
     }
 
     private void updateSize() {
-        this.setPreferredSize(new Dimension(gameModel.getPaper().getWidth() * gameModel.getPaper().getGridSize(), gameModel.getPaper().getHeight() * gameModel.getPaper().getGridSize()));
+        int gridSize = gameModel.getPaper().getGridSize();
+        this.setPreferredSize(new Dimension(gameModel.getPaper().getWidth() * gridSize, gameModel.getPaper().getHeight() * gridSize));
         revalidate();
         repaint();
     }

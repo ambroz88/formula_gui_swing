@@ -9,8 +9,9 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JPopupMenu;
 
-import com.ambroz.formula.gamemodel.GameModel;
+import com.ambroz.formula.gamemodel.race.RaceModel;
 import com.ambroz.formula.gamemodel.labels.OptionsLabels;
+import com.ambroz.formula.gamemodel.track.TrackBuilder;
 
 /**
  *
@@ -23,11 +24,13 @@ public final class TopMenuBar extends JMenuBar {
     private JMenu optionsMenu;
     private JMenu language;
 
-    private final GameModel gameModel;
+    private final RaceModel gameModel;
+    private final TrackBuilder builder;
     private OptionsLabels optionsLabels;
 
-    public TopMenuBar(GameModel gModel) {
+    public TopMenuBar(RaceModel gModel, TrackBuilder trackBuilder) {
         this.gameModel = gModel;
+        this.builder = trackBuilder;
         optionsLabels = new OptionsLabels(this.gameModel.getLanguage());
         initComponents();
     }
