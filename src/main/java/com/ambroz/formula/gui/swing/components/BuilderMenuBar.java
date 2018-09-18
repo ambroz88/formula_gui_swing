@@ -13,8 +13,8 @@ import javax.swing.JButton;
 import javax.swing.JMenuBar;
 import javax.swing.JSeparator;
 
-import com.ambroz.formula.gamemodel.track.Track;
 import com.ambroz.formula.gamemodel.labels.TrackMenuLabels;
+import com.ambroz.formula.gamemodel.track.Track;
 import com.ambroz.formula.gamemodel.track.TrackBuilder;
 import com.ambroz.formula.gui.swing.windows.SaveTrackWindow;
 
@@ -90,7 +90,7 @@ public final class BuilderMenuBar extends JMenuBar implements PropertyChangeList
             @Override
             public void actionPerformed(ActionEvent evt) {
                 builder.setStage(TrackBuilder.BUILD_LEFT);
-                builder.switchStart();
+                builder.getTrack().switchStart();
                 builder.generateEndPoints(Track.LEFT);
                 builder.repaintScene();
             }

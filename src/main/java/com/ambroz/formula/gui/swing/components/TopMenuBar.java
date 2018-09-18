@@ -9,8 +9,8 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JPopupMenu;
 
-import com.ambroz.formula.gamemodel.race.RaceModel;
 import com.ambroz.formula.gamemodel.labels.OptionsLabels;
+import com.ambroz.formula.gamemodel.race.RaceModel;
 import com.ambroz.formula.gamemodel.track.TrackBuilder;
 
 /**
@@ -65,11 +65,13 @@ public final class TopMenuBar extends JMenuBar {
             @Override
             public void mouseClicked(MouseEvent evt) {
                 if (gameModel.getLanguage().equals("CZ")) {
-                    language.setIcon(new ImageIcon(getClass().getClassLoader().getResource("CzechFlag 24x24.png")));
-                    gameModel.setLanguage("EN");
-                } else {
                     language.setIcon(new ImageIcon(getClass().getClassLoader().getResource("BritishFlag 24x24.png")));
+                    gameModel.setLanguage("EN");
+                    builder.setLanguage("EN");
+                } else {
+                    language.setIcon(new ImageIcon(getClass().getClassLoader().getResource("CzechFlag 24x24.png")));
                     gameModel.setLanguage("CZ");
+                    builder.setLanguage("CZ");
                 }
                 optionsLabels = new OptionsLabels(gameModel.getLanguage());
                 optionsMenu.setText(optionsLabels.getValue(OptionsLabels.TITLE) + "...");

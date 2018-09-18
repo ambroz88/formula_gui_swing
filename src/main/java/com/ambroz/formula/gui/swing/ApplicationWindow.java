@@ -50,7 +50,7 @@ public final class ApplicationWindow extends JFrame {
         Paper paper = new Paper();
         raceModel = new RaceModel(paper);
         raceModel.setLanguage("EN");
-        builder = new TrackBuilder();
+        builder = new TrackBuilder(paper);
         builder.setLanguage("EN");
 
         JPanel leftPanel = initLeftPanel();

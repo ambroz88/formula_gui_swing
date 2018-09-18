@@ -41,11 +41,12 @@ public class TrackBuilderComponent extends JPanel implements PropertyChangeListe
         g2.setBackground(Color.WHITE);
         g2.clearRect(0, 0, this.getWidth(), this.getHeight());
 
-        if (builder.isReadyForDraw()) {
+        Track track = builder.getTrack();
+        if (track.isReadyForDraw()) {
             //draw complete track
             g2.setColor(Colors.ROAD_SNOW);
-            int[][] trackPoints = builder.getCoordinates(builder.getPaper().getGridSize());
-            g2.fillPolygon(trackPoints[0], trackPoints[1], builder.getLeft().getLength() + builder.getRight().getLength());
+            int[][] trackPoints = track.getCoordinates(builder.getPaper().getGridSize());
+            g2.fillPolygon(trackPoints[0], trackPoints[1], track.getLeft().getLength() + track.getRight().getLength());
         }
 
         drawGrid(g2);
@@ -98,30 +99,31 @@ public class TrackBuilderComponent extends JPanel implements PropertyChangeListe
      * @param g2
      */
     private void drawTrack(Graphics2D g2) {
+        Track track = builder.getTrack();
         //left barrier:
-        if (builder.getLeft().getLength() > 1) {
-            g2.setStroke(new BasicStroke(builder.getLeftWidth()));
+        if (track.getLeft().getLength() > 1) {
+            g2.setStroke(new BasicStroke(track.getLeftWidth()));
             g2.setColor(Color.red);
-            drawPolyline(g2, builder.getLeft().choose(builder.getIndex(Track.LEFT), builder.getLeft().getLength() - 1));
+            drawPolyline(g2, track.getLeft().choose(track.getIndex(Track.LEFT), track.getLeft().getLength() - 1));
             g2.setColor(Color.black);
-            drawPolyline(g2, builder.getLeft().choose(0, builder.getIndex(Track.LEFT)));
+            drawPolyline(g2, track.getLeft().choose(0, track.getIndex(Track.LEFT)));
         }
         //right barrier:
-        if (builder.getRight().getLength() > 1) {
-            g2.setStroke(new BasicStroke(builder.getRightWidth()));
+        if (track.getRight().getLength() > 1) {
+            g2.setStroke(new BasicStroke(track.getRightWidth()));
             g2.setColor(Color.red);
-            drawPolyline(g2, builder.getRight().choose(builder.getIndex(Track.RIGHT), builder.getRight().getLength() - 1));
+            drawPolyline(g2, track.getRight().choose(track.getIndex(Track.RIGHT), track.getRight().getLength() - 1));
             g2.setColor(Color.black);
-            drawPolyline(g2, builder.getRight().choose(0, builder.getIndex(Track.RIGHT)));
+            drawPolyline(g2, track.getRight().choose(0, track.getIndex(Track.RIGHT)));
         }
 
         //draw start and finish (when track is ready):
-        if (builder.getStart() != null) {
+        if (track.getStart() != null) {
             g2.setStroke(new BasicStroke(5));
             g2.setColor(Color.PINK);
-            drawSegment(g2, builder.getStart());
-            if (builder.isReady()) {
-                drawSegment(g2, builder.getFinish());
+            drawSegment(g2, track.getStart());
+            if (track.isReady()) {
+                drawSegment(g2, track.getFinish());
             }
         }
     }
@@ -168,11 +170,11 @@ public class TrackBuilderComponent extends JPanel implements PropertyChangeListe
      */
     private void drawTrackPoints(Graphics2D g2) {
         if (builder.getStage() == TrackBuilder.EDIT_PRESS || builder.getStage() == TrackBuilder.EDIT_RELEASE) {
-            for (int i = 1; i < builder.getLeft().getLength() - 1; i++) {
-                drawCross(g2, builder.getLeft().getPoint(i));
+            for (int i = 1; i < builder.getTrack().getLeft().getLength() - 1; i++) {
+                drawCross(g2, builder.getTrack().getLeft().getPoint(i));
             }
-            for (int i = 1; i < builder.getRight().getLength() - 1; i++) {
-                drawCross(g2, builder.getRight().getPoint(i));
+            for (int i = 1; i < builder.getTrack().getRight().getLength() - 1; i++) {
+                drawCross(g2, builder.getTrack().getRight().getPoint(i));
             }
         }
     }
