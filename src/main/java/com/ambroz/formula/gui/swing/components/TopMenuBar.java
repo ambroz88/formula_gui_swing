@@ -53,12 +53,7 @@ public final class TopMenuBar extends JMenuBar {
             }
         });
 
-        language = new JMenu() {
-            @Override
-            public JPopupMenu getPopupMenu() {
-                return new JPopupMenu();
-            }
-        };
+        language = new JMenu();
         language.setIcon(new ImageIcon(getClass().getClassLoader().getResource("CzechFlag 24x24.png")));
 
         language.addMouseListener(new MouseAdapter() {

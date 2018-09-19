@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.HeadlessException;
 import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -29,26 +30,28 @@ import com.ambroz.formula.gui.swing.windows.ConfirmWindow;
  *
  * @author Jiri Ambroz <ambroz88@seznam.cz>
  */
-public final class TracksComponent extends JPanel implements ListSelectionListener, PropertyChangeListener {
+public final class TrackListComponent extends JPanel implements ListSelectionListener, PropertyChangeListener {
 
     public static final int BUILD = 0;
     public static final int RACE = 1;
 
     private final RaceModel raceModel;
+    private final TrackBuilder builder;
     private final JLabel trackLabel;
     private JList<String> list;
     private int index;
     private int activeTab;
 
-    public TracksComponent(RaceModel gameModel, TrackBuilder trackBuilder) {
+    public TrackListComponent(RaceModel gameModel, TrackBuilder trackBuilder) {
         setLayout(new BorderLayout());
         setBorder(new LineBorder(Color.BLACK, 1));
 
         this.raceModel = gameModel;
         this.raceModel.addPropertyChangeListener(this);
-        trackBuilder.addPropertyChangeListener(this);
-        index = -1;
+        this.builder = trackBuilder;
+        this.builder.addPropertyChangeListener(this);
 
+        index = -1;
         trackLabel = new JLabel("     Available Tracks:     ");
         trackLabel.setHorizontalTextPosition(JLabel.CENTER);
 
@@ -105,15 +108,12 @@ public final class TracksComponent extends JPanel implements ListSelectionListen
                 index = e.getFirstIndex();
                 if (getActiveTab() == RACE) {
                     if (this.raceModel.getStage() > RaceModel.FIRST_TURN) {
-                        ConfirmWindow conf = new ConfirmWindow(this.raceModel);
-                        Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
-                        conf.setLocation(dim.width / 2 - conf.getWidth() / 2, dim.height / 2 - conf.getHeight() / 2);
-                        conf.setVisible(true);
+                        callConfirmWindow();
                     } else {
-                        loadSelectedTrack();
+                        loadTrackForRace();
                     }
                 } else if (getActiveTab() == BUILD) {
-
+                    loadTrackForBuilding();
                 }
             } else {
                 index = -1;
@@ -121,12 +121,33 @@ public final class TracksComponent extends JPanel implements ListSelectionListen
         }
     }
 
-    private void loadSelectedTrack() {
+    private void callConfirmWindow() throws HeadlessException {
+        ConfirmWindow conf = new ConfirmWindow(this.raceModel);
+        Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+        conf.setLocation(dim.width / 2 - conf.getWidth() / 2, dim.height / 2 - conf.getHeight() / 2);
+        conf.setVisible(true);
+    }
+
+    private void loadTrackForRace() {
         String name = list.getSelectedValue();
         if (name != null) {
             Track track = TrackIO.trackFromJSON(name);
             if (track != null) {
                 raceModel.prepareGame(track);
+            } else {
+//                model.fireHint(HintLabels.WRONG_TRACK);
+            }
+        }
+    }
+
+    private void loadTrackForBuilding() {
+        String name = list.getSelectedValue();
+        if (name != null) {
+            Track track = TrackIO.trackFromJSON(name);
+            if (track != null) {
+                builder.reset();
+                builder.setTrack(track);
+                builder.repaintScene();
             } else {
 //                model.fireHint(HintLabels.WRONG_TRACK);
             }
@@ -140,7 +161,7 @@ public final class TracksComponent extends JPanel implements ListSelectionListen
             revalidate();
             repaint();
         } else if (evt.getPropertyName().equals("loadTrack")) {
-            loadSelectedTrack();
+            loadTrackForRace();
         }
     }
 

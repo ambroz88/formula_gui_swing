@@ -22,7 +22,7 @@ import com.ambroz.formula.gui.swing.components.BuilderMenuBar;
 import com.ambroz.formula.gui.swing.components.RaceComponent;
 import com.ambroz.formula.gui.swing.components.TopMenuBar;
 import com.ambroz.formula.gui.swing.components.TrackBuilderComponent;
-import com.ambroz.formula.gui.swing.components.TracksComponent;
+import com.ambroz.formula.gui.swing.components.TrackListComponent;
 import com.ambroz.formula.gui.swing.components.VerticalLabelUI;
 import com.ambroz.formula.gui.swing.tools.BuilderMouseController;
 import com.ambroz.formula.gui.swing.tools.RaceMouseController;
@@ -36,7 +36,7 @@ public final class ApplicationWindow extends JFrame {
 
     private final RaceModel raceModel;
     private final TrackBuilder builder;
-    private TracksComponent trackList;
+    private TrackListComponent trackList;
     private JTabbedPane tabs;
 
     public ApplicationWindow() {
@@ -75,7 +75,7 @@ public final class ApplicationWindow extends JFrame {
         JPanel leftPanel = new JPanel(new BorderLayout());
 
         TopMenuBar topMenu = new TopMenuBar(raceModel, builder);
-        trackList = new TracksComponent(raceModel, builder);
+        trackList = new TrackListComponent(raceModel, builder);
         JScrollPane trackSelectorPanel = new JScrollPane(trackList);
         trackSelectorPanel.setPreferredSize(new Dimension(150, 0));
 
@@ -92,10 +92,10 @@ public final class ApplicationWindow extends JFrame {
             public void stateChanged(ChangeEvent e) {
                 int tabIndex = tabs.getSelectedIndex();
                 if (tabIndex == 0) {
-                    trackList.setActiveTab(TracksComponent.RACE);
+                    trackList.setActiveTab(TrackListComponent.RACE);
                     raceModel.setStage(RaceModel.FIRST_TURN);
                 } else if (tabIndex == 1) {
-                    trackList.setActiveTab(TracksComponent.BUILD);
+                    trackList.setActiveTab(TrackListComponent.BUILD);
                     builder.startBuild(Track.LEFT);
                 }
             }

@@ -44,7 +44,7 @@ public class RaceComponent extends JPanel implements PropertyChangeListener {
         if (gameModel.getStage() < RaceModel.FIRST_TURN) {
             back = Color.white;
         } else {
-            back = Colors.GAME_SAND;
+            back = Colors.GAME_GRASS;
         }
 
         g2.setBackground(back);
