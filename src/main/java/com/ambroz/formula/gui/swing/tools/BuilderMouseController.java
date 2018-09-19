@@ -66,7 +66,6 @@ public class BuilderMouseController extends MouseAdapter {
     @Override
     public void mouseClicked(MouseEvent evt) {
         builder.buildTrack(Conversions.clickToPoint(evt));
-        image.repaint();
     }
 
 }

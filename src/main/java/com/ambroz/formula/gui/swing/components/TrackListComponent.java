@@ -145,7 +145,7 @@ public final class TrackListComponent extends JPanel implements ListSelectionLis
         if (name != null) {
             Track track = TrackIO.trackFromJSON(name);
             if (track != null) {
-                builder.reset();
+                builder.clearScene();
                 builder.setTrack(track);
                 builder.repaintScene();
             } else {

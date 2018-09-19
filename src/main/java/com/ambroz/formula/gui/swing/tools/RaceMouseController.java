@@ -56,7 +56,6 @@ public class RaceMouseController extends MouseAdapter {
     @Override
     public void mouseClicked(MouseEvent evt) {
         gModel.moveWithPlayer(Conversions.clickToPoint(evt));
-        image.repaint();
     }
 
 }

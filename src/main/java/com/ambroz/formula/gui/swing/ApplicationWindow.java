@@ -15,6 +15,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import com.ambroz.formula.gamemodel.datamodel.Paper;
+import com.ambroz.formula.gamemodel.labels.GeneralLabels;
 import com.ambroz.formula.gamemodel.race.RaceModel;
 import com.ambroz.formula.gamemodel.track.Track;
 import com.ambroz.formula.gamemodel.track.TrackBuilder;
@@ -34,24 +35,15 @@ import com.ambroz.formula.gui.swing.tools.RaceMouseController;
  */
 public final class ApplicationWindow extends JFrame {
 
-    private final RaceModel raceModel;
-    private final TrackBuilder builder;
+    private RaceModel raceModel;
+    private TrackBuilder builder;
+    private GeneralLabels generalLabels;
     private TrackListComponent trackList;
     private JTabbedPane tabs;
 
     public ApplicationWindow() {
-        setTitle("Formula Race 1.0");
-        ImageIcon img = new ImageIcon(getClass().getClassLoader().getResource("Helmet 32x32.png"));
-        setIconImage(img.getImage());
-        setLayout(new BorderLayout());
-        requestFocusInWindow(true);
-        setMinimumSize(new Dimension(700, 400));
-
-        Paper paper = new Paper();
-        raceModel = new RaceModel(paper);
-        raceModel.setLanguage("EN");
-        builder = new TrackBuilder(paper);
-        builder.setLanguage("EN");
+        initWindow();
+        initGameLogic();
 
         JPanel leftPanel = initLeftPanel();
         add(leftPanel, BorderLayout.WEST);
@@ -69,6 +61,25 @@ public final class ApplicationWindow extends JFrame {
         int width = gd.getDisplayMode().getWidth();
         int height = gd.getDisplayMode().getHeight();
         gameWindow.setSize(new Dimension(width, height));
+    }
+
+    private void initWindow() {
+        setTitle("Formula Race 1.1");
+        ImageIcon img = new ImageIcon(getClass().getClassLoader().getResource("Helmet 32x32.png"));
+        setIconImage(img.getImage());
+        setLayout(new BorderLayout());
+        requestFocusInWindow(true);
+        setMinimumSize(new Dimension(800, 600));
+    }
+
+    private void initGameLogic() {
+        Paper paper = new Paper();
+        String initLanguage = "EN";
+        raceModel = new RaceModel(paper);
+        raceModel.setLanguage(initLanguage);
+        builder = new TrackBuilder(paper);
+        builder.setLanguage(initLanguage);
+        generalLabels = new GeneralLabels(initLanguage);
     }
 
     private JPanel initLeftPanel() {
@@ -105,14 +116,8 @@ public final class ApplicationWindow extends JFrame {
         tabs.addTab(null, scrollDrawPanel);
         tabs.addTab(null, trackBuilderPanel);
 
-        tabs.setTabComponentAt(0, createVerticalLabel(" Play Race "));
-        tabs.setTabComponentAt(1, createVerticalLabel(" Build Track "));
-    }
-
-    private JLabel createVerticalLabel(String title) {
-        JLabel labelGame = new JLabel(title);
-        labelGame.setUI(new VerticalLabelUI(false));
-        return labelGame;
+        tabs.setTabComponentAt(0, createVerticalLabel(" " + generalLabels.getValue(GeneralLabels.PLAY_GAME) + " "));
+        tabs.setTabComponentAt(1, createVerticalLabel(" " + generalLabels.getValue(GeneralLabels.BUILD_TRACK) + " "));
     }
 
     private JScrollPane createDrawPanel() {
@@ -139,6 +144,12 @@ public final class ApplicationWindow extends JFrame {
         builderPanel.add(builderBar, BorderLayout.NORTH);
         builderPanel.add(scroll, BorderLayout.CENTER);
         return builderPanel;
+    }
+
+    private JLabel createVerticalLabel(String title) {
+        JLabel labelGame = new JLabel(title);
+        labelGame.setUI(new VerticalLabelUI(false));
+        return labelGame;
     }
 
 }
