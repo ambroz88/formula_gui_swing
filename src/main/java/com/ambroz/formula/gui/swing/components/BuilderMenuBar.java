@@ -2,7 +2,6 @@ package com.ambroz.formula.gui.swing.components;
 
 import java.awt.Dimension;
 import java.awt.FlowLayout;
-import java.awt.Font;
 import java.awt.Insets;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
@@ -25,8 +24,6 @@ import com.ambroz.formula.gui.swing.windows.SaveTrackWindow;
  * @author Jiri Ambroz <ambroz88@seznam.cz>
  */
 public final class BuilderMenuBar extends JMenuBar implements PropertyChangeListener {
-
-    public static final Font MENU_FONT = new Font("Segoe UI", 0, 16);
 
     private final TrackBuilder builder;
     private TrackMenuLabels builderMenuLabels;
@@ -64,9 +61,11 @@ public final class BuilderMenuBar extends JMenuBar implements PropertyChangeList
         editPoints = new JButton(new ImageIcon(getClass().getClassLoader().getResource("Edit 36x36.png")));
 
         switchStart = new JButton(new ImageIcon(getClass().getClassLoader().getResource("Switch 36x36.png")));
+        switchStart.setEnabled(false);
         deletePoint = new JButton(new ImageIcon(getClass().getClassLoader().getResource("Back 36x36.png")));
         newTrack = new JButton(new ImageIcon(getClass().getClassLoader().getResource("Delete All 36x36.png")));
         saveTrack = new JButton(new ImageIcon(getClass().getClassLoader().getResource("Save 36x36.png")));
+        saveTrack.setEnabled(false);
     }
 
     private void addInsets() {
@@ -119,6 +118,7 @@ public final class BuilderMenuBar extends JMenuBar implements PropertyChangeList
             public void actionPerformed(ActionEvent evt) {
                 builder.setStage(TrackBuilder.BUILD_LEFT);
                 builder.getTrack().switchStart();
+                builder.generateEndPoints();
                 builder.repaintScene();
             }
         });
@@ -168,6 +168,9 @@ public final class BuilderMenuBar extends JMenuBar implements PropertyChangeList
         if (evt.getPropertyName().equals("language")) {
             builderMenuLabels = new TrackMenuLabels(builder.getLanguage());
             addToolTips();
+        } else if (evt.getPropertyName().equals("trackReady")) {
+            saveTrack.setEnabled((Boolean) evt.getNewValue());
+            switchStart.setEnabled((Boolean) evt.getNewValue());
         }
     }
 

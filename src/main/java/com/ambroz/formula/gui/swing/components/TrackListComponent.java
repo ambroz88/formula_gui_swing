@@ -20,10 +20,12 @@ import javax.swing.border.LineBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import com.ambroz.formula.gamemodel.labels.GeneralLabels;
 import com.ambroz.formula.gamemodel.race.RaceModel;
 import com.ambroz.formula.gamemodel.track.Track;
 import com.ambroz.formula.gamemodel.track.TrackBuilder;
 import com.ambroz.formula.gamemodel.utils.TrackIO;
+import com.ambroz.formula.gui.swing.utils.Fonts;
 import com.ambroz.formula.gui.swing.windows.ConfirmWindow;
 
 /**
@@ -37,7 +39,8 @@ public final class TrackListComponent extends JPanel implements ListSelectionLis
 
     private final RaceModel raceModel;
     private final TrackBuilder builder;
-    private final JLabel trackLabel;
+    private JLabel trackLabel;
+    private GeneralLabels generalLabels;
     private JList<String> list;
     private int index;
     private int activeTab;
@@ -51,15 +54,21 @@ public final class TrackListComponent extends JPanel implements ListSelectionLis
         this.builder = trackBuilder;
         this.builder.addPropertyChangeListener(this);
 
+        generalLabels = new GeneralLabels(raceModel.getLanguage());
         index = -1;
-        trackLabel = new JLabel("     Available Tracks:     ");
-        trackLabel.setHorizontalTextPosition(JLabel.CENTER);
 
+        initTrackTitle();
         initTrackList();
         updateTracks();
 
         add(trackLabel, BorderLayout.NORTH);
         add(list, BorderLayout.CENTER);
+    }
+
+    private void initTrackTitle() {
+        trackLabel = new JLabel(generalLabels.getValue(GeneralLabels.TRACK_TITLE));
+        trackLabel.setPreferredSize(new Dimension(145, 30));
+        trackLabel.setFont(Fonts.TITLE_FONT);
     }
 
     private void initTrackList() {
@@ -147,6 +156,7 @@ public final class TrackListComponent extends JPanel implements ListSelectionLis
             if (track != null) {
                 builder.clearScene();
                 builder.setTrack(track);
+                builder.fireTrackReady(true);
                 builder.repaintScene();
             } else {
 //                model.fireHint(HintLabels.WRONG_TRACK);
@@ -162,6 +172,9 @@ public final class TrackListComponent extends JPanel implements ListSelectionLis
             repaint();
         } else if (evt.getPropertyName().equals("loadTrack")) {
             loadTrackForRace();
+        } else if (evt.getPropertyName().equals("language")) {
+            generalLabels = new GeneralLabels(raceModel.getLanguage());
+            trackLabel.setText(generalLabels.getValue(GeneralLabels.TRACK_TITLE));
         }
     }
 

@@ -4,6 +4,8 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
@@ -27,13 +29,14 @@ import com.ambroz.formula.gui.swing.components.TrackListComponent;
 import com.ambroz.formula.gui.swing.components.VerticalLabelUI;
 import com.ambroz.formula.gui.swing.tools.BuilderMouseController;
 import com.ambroz.formula.gui.swing.tools.RaceMouseController;
+import com.ambroz.formula.gui.swing.utils.Fonts;
 
 /**
  * Component that shows main window with track and formulas and toolbar.
  *
  * @author Jiri Ambroz <ambroz88@seznam.cz>
  */
-public final class ApplicationWindow extends JFrame {
+public final class ApplicationWindow extends JFrame implements PropertyChangeListener {
 
     private RaceModel raceModel;
     private TrackBuilder builder;
@@ -75,11 +78,13 @@ public final class ApplicationWindow extends JFrame {
     private void initGameLogic() {
         Paper paper = new Paper();
         String initLanguage = "EN";
+        generalLabels = new GeneralLabels(initLanguage);
+
         raceModel = new RaceModel(paper);
         raceModel.setLanguage(initLanguage);
+        raceModel.addPropertyChangeListener(this);
         builder = new TrackBuilder(paper);
         builder.setLanguage(initLanguage);
-        generalLabels = new GeneralLabels(initLanguage);
     }
 
     private JPanel initLeftPanel() {
@@ -102,6 +107,7 @@ public final class ApplicationWindow extends JFrame {
             @Override
             public void stateChanged(ChangeEvent e) {
                 int tabIndex = tabs.getSelectedIndex();
+
                 if (tabIndex == 0) {
                     trackList.setActiveTab(TrackListComponent.RACE);
                     raceModel.setStage(RaceModel.FIRST_TURN);
@@ -109,8 +115,10 @@ public final class ApplicationWindow extends JFrame {
                     trackList.setActiveTab(TrackListComponent.BUILD);
                     builder.startBuild(Track.LEFT);
                 }
+
             }
         });
+
         JScrollPane scrollDrawPanel = createDrawPanel();
         JPanel trackBuilderPanel = createTrackBuilderPanel();
         tabs.addTab(null, scrollDrawPanel);
@@ -149,7 +157,23 @@ public final class ApplicationWindow extends JFrame {
     private JLabel createVerticalLabel(String title) {
         JLabel labelGame = new JLabel(title);
         labelGame.setUI(new VerticalLabelUI(false));
+        labelGame.setFont(Fonts.MENU_FONT);
         return labelGame;
+    }
+
+    @Override
+    public void propertyChange(PropertyChangeEvent evt) {
+        if (evt.getPropertyName().equals("language")) {
+            generalLabels = new GeneralLabels(raceModel.getLanguage());
+
+            JLabel raceLabel = (JLabel) tabs.getTabComponentAt(0);
+            raceLabel.setText(" " + generalLabels.getValue(GeneralLabels.PLAY_GAME) + " ");
+            tabs.setTabComponentAt(0, raceLabel);
+
+            JLabel buildLabel = (JLabel) tabs.getTabComponentAt(1);
+            buildLabel.setText(" " + generalLabels.getValue(GeneralLabels.BUILD_TRACK) + " ");
+            tabs.setTabComponentAt(1, buildLabel);
+        }
     }
 
 }
