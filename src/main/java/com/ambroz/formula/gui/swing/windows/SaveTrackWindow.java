@@ -19,12 +19,13 @@ import javax.swing.JTextField;
 import javax.swing.KeyStroke;
 
 import com.ambroz.formula.gamemodel.labels.DialogLabels;
+import com.ambroz.formula.gamemodel.labels.HintLabels;
 import com.ambroz.formula.gamemodel.track.TrackBuilder;
 
 /**
  * This dialog serves for asking user if he wants to load new Track even if the race still running.
  *
- * @author Jiri Ambroz
+ * @author Jiri Ambroz <ambroz88@seznam.cz>
  */
 public final class SaveTrackWindow extends JDialog {
 
@@ -93,7 +94,7 @@ public final class SaveTrackWindow extends JDialog {
 
     private void doClose() {
         if (!saved) {
-//            gameModel.fireHint(HintLabels.HINT_FAILED);
+            builder.fireHint(HintLabels.HINT_FAILED);
         }
         dispose();
     }

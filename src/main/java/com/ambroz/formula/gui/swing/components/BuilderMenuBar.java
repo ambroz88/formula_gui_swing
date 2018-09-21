@@ -107,19 +107,14 @@ public final class BuilderMenuBar extends JMenuBar implements PropertyChangeList
         editPoints.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent evt) {
-                builder.setStage(TrackBuilder.EDIT_PRESS);
-                builder.getPoints().clear();
-                builder.repaintScene();
+                builder.startEditing();
             }
         });
 
         switchStart.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent evt) {
-                builder.setStage(TrackBuilder.BUILD_LEFT);
-                builder.getTrack().switchStart();
-                builder.generateEndPoints();
-                builder.repaintScene();
+                builder.switchTrack();
             }
         });
 

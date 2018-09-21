@@ -6,6 +6,7 @@ import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.awt.event.WindowEvent;
 
 import javax.swing.AbstractAction;
 import javax.swing.ActionMap;
@@ -21,13 +22,13 @@ import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 
-import com.ambroz.formula.gamemodel.race.RaceModel;
 import com.ambroz.formula.gamemodel.labels.DialogLabels;
+import com.ambroz.formula.gamemodel.race.RaceModel;
 
 /**
  * This dialog serves for asking user if he wants to load new Track even if the race still running.
  *
- * @author Jiri Ambroz
+ * @author Jiri Ambroz <ambroz88@seznam.cz>
  */
 public final class ConfirmWindow extends JDialog {
 
@@ -130,7 +131,7 @@ public final class ConfirmWindow extends JDialog {
     /**
      * Closes the dialog
      */
-    private void closeDialog(java.awt.event.WindowEvent evt) {
+    private void closeDialog(WindowEvent evt) {
         doClose(RET_NO);
     }
 

@@ -22,6 +22,7 @@ import com.ambroz.formula.gamemodel.race.RaceModel;
 import com.ambroz.formula.gamemodel.track.Track;
 import com.ambroz.formula.gamemodel.track.TrackBuilder;
 import com.ambroz.formula.gui.swing.components.BuilderMenuBar;
+import com.ambroz.formula.gui.swing.components.HintPanel;
 import com.ambroz.formula.gui.swing.components.RaceComponent;
 import com.ambroz.formula.gui.swing.components.TopMenuBar;
 import com.ambroz.formula.gui.swing.components.TrackBuilderComponent;
@@ -52,7 +53,12 @@ public final class ApplicationWindow extends JFrame implements PropertyChangeLis
         add(leftPanel, BorderLayout.WEST);
 
         initTabs();
-        add(tabs, BorderLayout.CENTER);
+
+        JPanel centralPanel = new JPanel(new BorderLayout());
+        centralPanel.add(tabs, BorderLayout.CENTER);
+        centralPanel.add(new HintPanel(raceModel, builder), BorderLayout.SOUTH);
+
+        add(centralPanel, BorderLayout.CENTER);
     }
 
     public static void main(String[] args) {
