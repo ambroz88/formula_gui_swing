@@ -42,6 +42,7 @@ public final class ApplicationWindow extends JFrame implements PropertyChangeLis
     private RaceModel raceModel;
     private TrackBuilder builder;
     private GeneralLabels generalLabels;
+
     private TrackListComponent trackList;
     private JTabbedPane tabs;
 
@@ -54,10 +55,7 @@ public final class ApplicationWindow extends JFrame implements PropertyChangeLis
 
         initTabs();
 
-        JPanel centralPanel = new JPanel(new BorderLayout());
-        centralPanel.add(tabs, BorderLayout.CENTER);
-        centralPanel.add(new HintPanel(raceModel, builder), BorderLayout.SOUTH);
-
+        JPanel centralPanel = initCentralPanel();
         add(centralPanel, BorderLayout.CENTER);
     }
 
@@ -165,6 +163,13 @@ public final class ApplicationWindow extends JFrame implements PropertyChangeLis
         labelGame.setUI(new VerticalLabelUI(false));
         labelGame.setFont(Fonts.MENU_FONT);
         return labelGame;
+    }
+
+    private JPanel initCentralPanel() {
+        JPanel centralPanel = new JPanel(new BorderLayout());
+        centralPanel.add(tabs, BorderLayout.CENTER);
+        centralPanel.add(new HintPanel(raceModel, builder), BorderLayout.SOUTH);
+        return centralPanel;
     }
 
     @Override

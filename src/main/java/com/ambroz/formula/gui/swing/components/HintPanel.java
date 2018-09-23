@@ -22,7 +22,7 @@ public class HintPanel extends JPanel implements PropertyChangeListener {
 
     private final RaceModel raceModel;
     private final TrackBuilder builder;
-    private JLabel hintLabel;
+    private final JLabel hintLabel;
 
     public HintPanel(RaceModel gameModel, TrackBuilder trackBuilder) {
         raceModel = gameModel;
@@ -33,7 +33,7 @@ public class HintPanel extends JPanel implements PropertyChangeListener {
         setLayout(new BorderLayout());
         setPreferredSize(new Dimension(700, 50));
 
-        hintLabel = new JLabel("Let's have fun!!!", JLabel.CENTER);
+        hintLabel = new JLabel("", JLabel.CENTER);
         hintLabel.setFont(Fonts.MENU_FONT);
         hintLabel.setForeground(new Color(255, 0, 0));
 

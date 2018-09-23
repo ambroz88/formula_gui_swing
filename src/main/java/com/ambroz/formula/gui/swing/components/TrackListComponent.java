@@ -21,6 +21,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import com.ambroz.formula.gamemodel.labels.GeneralLabels;
+import com.ambroz.formula.gamemodel.labels.HintLabels;
 import com.ambroz.formula.gamemodel.race.RaceModel;
 import com.ambroz.formula.gamemodel.track.Track;
 import com.ambroz.formula.gamemodel.track.TrackBuilder;
@@ -144,7 +145,7 @@ public final class TrackListComponent extends JPanel implements ListSelectionLis
             if (track != null) {
                 raceModel.prepareGame(track);
             } else {
-//                model.fireHint(HintLabels.WRONG_TRACK);
+                raceModel.fireHint(HintLabels.WRONG_TRACK);
             }
         }
     }
@@ -159,7 +160,7 @@ public final class TrackListComponent extends JPanel implements ListSelectionLis
                 builder.fireTrackReady(true);
                 builder.repaintScene();
             } else {
-//                model.fireHint(HintLabels.WRONG_TRACK);
+                raceModel.fireHint(HintLabels.WRONG_TRACK);
             }
         }
     }
