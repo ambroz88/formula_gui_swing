@@ -1,5 +1,6 @@
 package com.ambroz.formula.gui.swing.components;
 
+import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
@@ -10,6 +11,7 @@ import java.beans.PropertyChangeListener;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JMenuBar;
+import javax.swing.JPanel;
 
 import com.ambroz.formula.gamemodel.labels.StartMenuLabels;
 import com.ambroz.formula.gamemodel.race.RaceModel;
@@ -22,6 +24,7 @@ public class RaceMenuBar extends JMenuBar implements PropertyChangeListener {
 
     private final RaceModel raceModel;
     private StartMenuLabels startLabels;
+    private HintPanel hintPanel;
     private JButton playAgain;
     private JButton newGame;
 
@@ -34,7 +37,7 @@ public class RaceMenuBar extends JMenuBar implements PropertyChangeListener {
     }
 
     private void initComponents() {
-        setLayout(new FlowLayout(FlowLayout.LEFT, 5, 0));
+        setLayout(new BorderLayout());
 
         initButtons();
 
@@ -48,6 +51,7 @@ public class RaceMenuBar extends JMenuBar implements PropertyChangeListener {
     private void initButtons() {
         newGame = new JButton(new ImageIcon(getClass().getClassLoader().getResource("NewGame 36x36.png")));
         playAgain = new JButton(new ImageIcon(getClass().getClassLoader().getResource("PlayAgain 36x36.png")));
+        hintPanel = new HintPanel(raceModel);
     }
 
     private void addInsets() {
@@ -77,8 +81,12 @@ public class RaceMenuBar extends JMenuBar implements PropertyChangeListener {
     }
 
     private void addButtonsToBar() {
-        add(newGame);
-        add(playAgain);
+        JPanel buttons = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 0));
+        buttons.add(newGame);
+        buttons.add(playAgain);
+
+        add(buttons, BorderLayout.WEST);
+        add(hintPanel, BorderLayout.CENTER);
     }
 
     @Override

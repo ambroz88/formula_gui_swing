@@ -19,10 +19,8 @@ import javax.swing.event.ChangeListener;
 import com.ambroz.formula.gamemodel.datamodel.Paper;
 import com.ambroz.formula.gamemodel.labels.GeneralLabels;
 import com.ambroz.formula.gamemodel.race.RaceModel;
-import com.ambroz.formula.gamemodel.track.Track;
 import com.ambroz.formula.gamemodel.track.TrackBuilder;
 import com.ambroz.formula.gui.swing.components.BuilderMenuBar;
-import com.ambroz.formula.gui.swing.components.HintPanel;
 import com.ambroz.formula.gui.swing.components.RaceComponent;
 import com.ambroz.formula.gui.swing.components.RaceMenuBar;
 import com.ambroz.formula.gui.swing.components.TopMenuBar;
@@ -56,8 +54,7 @@ public final class ApplicationWindow extends JFrame implements PropertyChangeLis
 
         initTabs();
 
-        JPanel centralPanel = initCentralPanel();
-        add(centralPanel, BorderLayout.CENTER);
+        add(tabs, BorderLayout.CENTER);
     }
 
     public static void main(String[] args) {
@@ -115,10 +112,8 @@ public final class ApplicationWindow extends JFrame implements PropertyChangeLis
 
                 if (tabIndex == 0) {
                     trackList.setActiveTab(TrackListComponent.RACE);
-                    raceModel.setStage(RaceModel.FIRST_TURN);
                 } else if (tabIndex == 1) {
                     trackList.setActiveTab(TrackListComponent.BUILD);
-                    builder.startBuild(Track.LEFT);
                 }
 
             }
@@ -168,13 +163,6 @@ public final class ApplicationWindow extends JFrame implements PropertyChangeLis
         labelGame.setUI(new VerticalLabelUI(false));
         labelGame.setFont(Fonts.MENU_FONT);
         return labelGame;
-    }
-
-    private JPanel initCentralPanel() {
-        JPanel centralPanel = new JPanel(new BorderLayout());
-        centralPanel.add(tabs, BorderLayout.CENTER);
-        centralPanel.add(new HintPanel(raceModel, builder), BorderLayout.SOUTH);
-        return centralPanel;
     }
 
     @Override

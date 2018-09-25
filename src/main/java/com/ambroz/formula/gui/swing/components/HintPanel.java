@@ -10,8 +10,7 @@ import java.beans.PropertyChangeListener;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import com.ambroz.formula.gamemodel.race.RaceModel;
-import com.ambroz.formula.gamemodel.track.TrackBuilder;
+import com.ambroz.formula.gamemodel.datamodel.CoreModel;
 import com.ambroz.formula.gui.swing.utils.Fonts;
 
 /**
@@ -20,18 +19,15 @@ import com.ambroz.formula.gui.swing.utils.Fonts;
  */
 public class HintPanel extends JPanel implements PropertyChangeListener {
 
-    private final RaceModel raceModel;
-    private final TrackBuilder builder;
+    private final CoreModel coreModel;
     private final JLabel hintLabel;
 
-    public HintPanel(RaceModel gameModel, TrackBuilder trackBuilder) {
-        raceModel = gameModel;
-        this.raceModel.addPropertyChangeListener(this);
-        builder = trackBuilder;
-        this.builder.addPropertyChangeListener(this);
+    public HintPanel(CoreModel model) {
+        coreModel = model;
+        this.coreModel.addPropertyChangeListener(this);
 
         setLayout(new BorderLayout());
-        setPreferredSize(new Dimension(700, 50));
+        setPreferredSize(new Dimension(700, 45));
 
         hintLabel = new JLabel("", JLabel.CENTER);
         hintLabel.setFont(Fonts.MENU_FONT);

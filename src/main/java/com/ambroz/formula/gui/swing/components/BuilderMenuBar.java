@@ -1,5 +1,6 @@
 package com.ambroz.formula.gui.swing.components;
 
+import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Insets;
@@ -12,6 +13,7 @@ import java.beans.PropertyChangeListener;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JMenuBar;
+import javax.swing.JPanel;
 import javax.swing.JSeparator;
 
 import com.ambroz.formula.gamemodel.labels.TrackMenuLabels;
@@ -27,6 +29,8 @@ public final class BuilderMenuBar extends JMenuBar implements PropertyChangeList
 
     private final TrackBuilder builder;
     private TrackMenuLabels builderMenuLabels;
+    private HintPanel hintPanel;
+
     private JButton createLeft;
     private JButton createRight;
     private JButton editPoints;
@@ -44,7 +48,7 @@ public final class BuilderMenuBar extends JMenuBar implements PropertyChangeList
     }
 
     private void initComponents() {
-        setLayout(new FlowLayout(FlowLayout.LEFT, 5, 0));
+        setLayout(new BorderLayout());
 
         initButtons();
 
@@ -66,6 +70,8 @@ public final class BuilderMenuBar extends JMenuBar implements PropertyChangeList
         newTrack = new JButton(new ImageIcon(getClass().getClassLoader().getResource("Delete All 36x36.png")));
         saveTrack = new JButton(new ImageIcon(getClass().getClassLoader().getResource("Save 36x36.png")));
         saveTrack.setEnabled(false);
+
+        hintPanel = new HintPanel(builder);
     }
 
     private void addInsets() {
@@ -146,16 +152,22 @@ public final class BuilderMenuBar extends JMenuBar implements PropertyChangeList
     }
 
     private void addButtonsToBar() {
-        add(createLeft);
-        add(createRight);
-        add(editPoints);
+        JPanel buttons = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 0));
+        buttons.add(createLeft);
+        buttons.add(createRight);
+        buttons.add(editPoints);
+
         JSeparator separator = new JSeparator(JSeparator.VERTICAL);
         separator.setBounds(0, 0, 20, 40);
-        add(separator);
-        add(switchStart);
-        add(deletePoint);
-        add(newTrack);
-        add(saveTrack);
+        buttons.add(separator);
+
+        buttons.add(switchStart);
+        buttons.add(deletePoint);
+        buttons.add(newTrack);
+        buttons.add(saveTrack);
+
+        add(buttons, BorderLayout.WEST);
+        add(hintPanel, BorderLayout.CENTER);
     }
 
     @Override
