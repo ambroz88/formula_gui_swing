@@ -24,6 +24,7 @@ import com.ambroz.formula.gamemodel.track.TrackBuilder;
 import com.ambroz.formula.gui.swing.components.BuilderMenuBar;
 import com.ambroz.formula.gui.swing.components.HintPanel;
 import com.ambroz.formula.gui.swing.components.RaceComponent;
+import com.ambroz.formula.gui.swing.components.RaceMenuBar;
 import com.ambroz.formula.gui.swing.components.TopMenuBar;
 import com.ambroz.formula.gui.swing.components.TrackBuilderComponent;
 import com.ambroz.formula.gui.swing.components.TrackListComponent;
@@ -71,7 +72,7 @@ public final class ApplicationWindow extends JFrame implements PropertyChangeLis
     }
 
     private void initWindow() {
-        setTitle("Formula Race 1.1");
+        setTitle("Formula Race 1.2");
         ImageIcon img = new ImageIcon(getClass().getClassLoader().getResource("Helmet 32x32.png"));
         setIconImage(img.getImage());
         setLayout(new BorderLayout());
@@ -123,7 +124,7 @@ public final class ApplicationWindow extends JFrame implements PropertyChangeLis
             }
         });
 
-        JScrollPane scrollDrawPanel = createDrawPanel();
+        JPanel scrollDrawPanel = createDrawPanel();
         JPanel trackBuilderPanel = createTrackBuilderPanel();
         tabs.addTab(null, scrollDrawPanel);
         tabs.addTab(null, trackBuilderPanel);
@@ -132,7 +133,8 @@ public final class ApplicationWindow extends JFrame implements PropertyChangeLis
         tabs.setTabComponentAt(1, createVerticalLabel(" " + generalLabels.getValue(GeneralLabels.BUILD_TRACK) + " "));
     }
 
-    private JScrollPane createDrawPanel() {
+    private JPanel createDrawPanel() {
+        RaceMenuBar raceBar = new RaceMenuBar(raceModel);
         RaceComponent drawPanel = new RaceComponent(raceModel);
 
         JScrollPane scroll = new JScrollPane(drawPanel);
@@ -140,7 +142,10 @@ public final class ApplicationWindow extends JFrame implements PropertyChangeLis
         scroll.getViewport().addMouseMotionListener(scrollListener);
         scroll.getViewport().addMouseListener(scrollListener);
 
-        return scroll;
+        JPanel racePanel = new JPanel(new BorderLayout());
+        racePanel.add(raceBar, BorderLayout.NORTH);
+        racePanel.add(scroll, BorderLayout.CENTER);
+        return racePanel;
     }
 
     private JPanel createTrackBuilderPanel() {

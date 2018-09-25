@@ -52,7 +52,7 @@ public final class BuilderMenuBar extends JMenuBar implements PropertyChangeList
         addToolTips();
         addActions();
 
-        addButtionsToBar();
+        addButtonsToBar();
     }
 
     private void initButtons() {
@@ -145,7 +145,7 @@ public final class BuilderMenuBar extends JMenuBar implements PropertyChangeList
 
     }
 
-    private void addButtionsToBar() {
+    private void addButtonsToBar() {
         add(createLeft);
         add(createRight);
         add(editPoints);
