@@ -17,6 +17,7 @@ import com.ambroz.formula.gamemodel.datamodel.Polyline;
 import com.ambroz.formula.gamemodel.datamodel.Segment;
 import com.ambroz.formula.gamemodel.race.Formula;
 import com.ambroz.formula.gamemodel.race.RaceModel;
+import com.ambroz.formula.gamemodel.race.Turn;
 import com.ambroz.formula.gamemodel.track.Track;
 import com.ambroz.formula.gamemodel.utils.Calc;
 import com.ambroz.formula.gui.swing.utils.Colors;
@@ -118,12 +119,12 @@ public class RaceComponent extends JPanel implements PropertyChangeListener {
     }
 
     private void drawTurns(Graphics g) {
-        List<Point> possibleTurns = gameModel.getTurnMaker().getTurns().getFreePoints();
+        List<Turn> possibleTurns = gameModel.getTurnMaker().getTurns().getFreeTurns();
         for (Point point : possibleTurns) {
             drawPoint(g, point);
         }
 
-        List<Point> crashes = gameModel.getTurnMaker().getTurns().getCollisionPoints();
+        List<Turn> crashes = gameModel.getTurnMaker().getTurns().getCollisionTurns();
         for (Point point : crashes) {
             drawCross(g, point);
         }
