@@ -16,8 +16,8 @@ import javax.swing.JMenuBar;
 import javax.swing.JPanel;
 import javax.swing.JSeparator;
 
+import com.ambroz.formula.gamemodel.enums.Side;
 import com.ambroz.formula.gamemodel.labels.TrackMenuLabels;
-import com.ambroz.formula.gamemodel.track.Track;
 import com.ambroz.formula.gamemodel.track.TrackBuilder;
 import com.ambroz.formula.gui.swing.windows.SaveTrackWindow;
 
@@ -99,14 +99,14 @@ public final class BuilderMenuBar extends JMenuBar implements PropertyChangeList
         createLeft.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent evt) {
-                builder.startBuild(Track.LEFT);
+                builder.startBuild(Side.Left);
             }
         });
 
         createRight.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent evt) {
-                builder.startBuild(Track.RIGHT);
+                builder.startBuild(Side.Right);
             }
         });
 

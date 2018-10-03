@@ -1,6 +1,7 @@
 package com.ambroz.formula.gui.swing;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
@@ -85,6 +86,8 @@ public final class ApplicationWindow extends JFrame implements PropertyChangeLis
         raceModel = new RaceModel(paper);
         raceModel.setLanguage(initLanguage);
         raceModel.addPropertyChangeListener(this);
+        raceModel.getTurnMaker().getFormula(1).setColor(Color.BLUE.getRGB());
+
         builder = new TrackBuilder(paper);
         builder.setLanguage(initLanguage);
     }
