@@ -49,7 +49,7 @@ public class BuilderMouseController extends MouseAdapter {
 
     @Override
     public void mousePressed(MouseEvent evt) {
-        if (builder.memorizeTrackPoint(Conversions.clickToPoint(evt))) {
+        if (builder.memorizeTrackPoint(Conversions.clickToGamePoint(builder.getPaper().getGridSize(), evt))) {
             edit = true;
         } else {
             edit = false;
@@ -59,13 +59,13 @@ public class BuilderMouseController extends MouseAdapter {
 
     @Override
     public void mouseReleased(MouseEvent evt) {
-        builder.replaceTrackPoint(Conversions.clickToPoint(evt));
+        builder.replaceTrackPoint(Conversions.clickToGamePoint(builder.getPaper().getGridSize(), evt));
         image.setCursor(defCursor);
     }
 
     @Override
     public void mouseClicked(MouseEvent evt) {
-        builder.buildTrack(Conversions.clickToPoint(evt));
+        builder.buildTrack(Conversions.clickToGamePoint(builder.getPaper().getGridSize(), evt));
     }
 
 }

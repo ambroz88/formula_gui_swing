@@ -1,4 +1,4 @@
-package com.ambroz.formula.gui.swing.components;
+package com.ambroz.formula.gui.swing.menu;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;

@@ -1,4 +1,4 @@
-package com.ambroz.formula.gui.swing.components;
+package com.ambroz.formula.gui.swing.menu;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
@@ -15,6 +15,7 @@ import javax.swing.JPanel;
 
 import com.ambroz.formula.gamemodel.labels.StartMenuLabels;
 import com.ambroz.formula.gamemodel.race.RaceModel;
+import com.ambroz.formula.gui.swing.components.HintPanel;
 
 /**
  *

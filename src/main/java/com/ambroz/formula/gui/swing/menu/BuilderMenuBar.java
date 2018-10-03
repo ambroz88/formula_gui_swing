@@ -1,4 +1,4 @@
-package com.ambroz.formula.gui.swing.components;
+package com.ambroz.formula.gui.swing.menu;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -19,6 +19,7 @@ import javax.swing.JSeparator;
 import com.ambroz.formula.gamemodel.enums.Side;
 import com.ambroz.formula.gamemodel.labels.TrackMenuLabels;
 import com.ambroz.formula.gamemodel.track.TrackBuilder;
+import com.ambroz.formula.gui.swing.components.HintPanel;
 import com.ambroz.formula.gui.swing.windows.SaveTrackWindow;
 
 /**

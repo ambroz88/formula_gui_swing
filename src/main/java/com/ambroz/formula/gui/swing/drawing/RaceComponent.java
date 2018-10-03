@@ -1,4 +1,4 @@
-package com.ambroz.formula.gui.swing.components;
+package com.ambroz.formula.gui.swing.drawing;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
