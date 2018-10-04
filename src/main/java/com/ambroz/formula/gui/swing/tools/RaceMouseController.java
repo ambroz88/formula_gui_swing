@@ -33,6 +33,11 @@ public class RaceMouseController extends MouseAdapter {
     }
 
     @Override
+    public void mouseMoved(MouseEvent e) {
+        gModel.fireCoordinates(Conversions.clickToGamePoint(gModel.getPaper().getGridSize(), e).toString());
+    }
+
+    @Override
     public void mouseDragged(MouseEvent e) {
         image.setCursor(hndCursor);
         JViewport vport = (JViewport) e.getSource();

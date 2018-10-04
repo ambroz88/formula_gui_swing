@@ -21,13 +21,13 @@ import com.ambroz.formula.gamemodel.datamodel.Paper;
 import com.ambroz.formula.gamemodel.labels.GeneralLabels;
 import com.ambroz.formula.gamemodel.race.RaceModel;
 import com.ambroz.formula.gamemodel.track.TrackBuilder;
-import com.ambroz.formula.gui.swing.menu.BuilderMenuBar;
-import com.ambroz.formula.gui.swing.drawing.RaceComponent;
-import com.ambroz.formula.gui.swing.menu.RaceMenuBar;
-import com.ambroz.formula.gui.swing.menu.TopMenuBar;
-import com.ambroz.formula.gui.swing.drawing.TrackBuilderComponent;
 import com.ambroz.formula.gui.swing.components.TrackListComponent;
 import com.ambroz.formula.gui.swing.components.VerticalLabelUI;
+import com.ambroz.formula.gui.swing.drawing.RaceComponent;
+import com.ambroz.formula.gui.swing.drawing.TrackBuilderComponent;
+import com.ambroz.formula.gui.swing.menu.BuilderMenuBar;
+import com.ambroz.formula.gui.swing.menu.RaceMenuBar;
+import com.ambroz.formula.gui.swing.menu.TopMenuBar;
 import com.ambroz.formula.gui.swing.tools.BuilderMouseController;
 import com.ambroz.formula.gui.swing.tools.RaceMouseController;
 import com.ambroz.formula.gui.swing.utils.Fonts;
@@ -80,16 +80,14 @@ public final class ApplicationWindow extends JFrame implements PropertyChangeLis
 
     private void initGameLogic() {
         Paper paper = new Paper();
-        String initLanguage = "EN";
-        generalLabels = new GeneralLabels(initLanguage);
 
         raceModel = new RaceModel(paper);
-        raceModel.setLanguage(initLanguage);
         raceModel.addPropertyChangeListener(this);
         raceModel.getTurnMaker().getFormula(1).setColor(Color.BLUE.getRGB());
 
         builder = new TrackBuilder(paper);
-        builder.setLanguage(initLanguage);
+
+        generalLabels = new GeneralLabels(raceModel.getLanguage().toString());
     }
 
     private JPanel initLeftPanel() {
@@ -171,7 +169,7 @@ public final class ApplicationWindow extends JFrame implements PropertyChangeLis
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         if (evt.getPropertyName().equals("language")) {
-            generalLabels = new GeneralLabels(raceModel.getLanguage());
+            generalLabels = new GeneralLabels(raceModel.getLanguage().toString());
 
             JLabel raceLabel = (JLabel) tabs.getTabComponentAt(0);
             raceLabel.setText(" " + generalLabels.getValue(GeneralLabels.PLAY_GAME) + " ");

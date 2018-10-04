@@ -48,7 +48,7 @@ public final class ConfirmWindow extends JDialog {
     public ConfirmWindow(RaceModel model) {
         super();
         this.model = model;
-        dialogLabels = new DialogLabels(this.model.getLanguage());
+        dialogLabels = new DialogLabels(this.model.getLanguage().toString());
 
         setPreferredSize(new Dimension(340, 115));
         setLayout(new BorderLayout());

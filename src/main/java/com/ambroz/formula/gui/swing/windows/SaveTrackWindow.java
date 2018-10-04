@@ -38,7 +38,7 @@ public final class SaveTrackWindow extends JDialog {
     public SaveTrackWindow(TrackBuilder trackBuilder) {
         super();
         this.builder = trackBuilder;
-        dialogLabels = new DialogLabels(this.builder.getLanguage());
+        dialogLabels = new DialogLabels(this.builder.getLanguage().toString());
 
         setPreferredSize(new Dimension(330, 110));
         setLayout(new FlowLayout(FlowLayout.CENTER, 5, 10));

@@ -55,7 +55,7 @@ public final class TrackListComponent extends JPanel implements ListSelectionLis
         this.builder = trackBuilder;
         this.builder.addPropertyChangeListener(this);
 
-        generalLabels = new GeneralLabels(raceModel.getLanguage());
+        generalLabels = new GeneralLabels(raceModel.getLanguage().toString());
         index = -1;
 
         initTrackTitle();
@@ -64,6 +64,7 @@ public final class TrackListComponent extends JPanel implements ListSelectionLis
 
         add(trackLabel, BorderLayout.NORTH);
         add(list, BorderLayout.CENTER);
+        add(new CoordinatesPanel(raceModel, builder), BorderLayout.SOUTH);
     }
 
     private void initTrackTitle() {
@@ -174,7 +175,7 @@ public final class TrackListComponent extends JPanel implements ListSelectionLis
         } else if (evt.getPropertyName().equals("loadTrack")) {
             loadTrackForRace();
         } else if (evt.getPropertyName().equals("language")) {
-            generalLabels = new GeneralLabels(raceModel.getLanguage());
+            generalLabels = new GeneralLabels(raceModel.getLanguage().toString());
             trackLabel.setText(generalLabels.getValue(GeneralLabels.TRACK_TITLE));
         }
     }

@@ -20,6 +20,8 @@ import com.ambroz.formula.gui.swing.utils.Conversions;
  */
 public class BuilderMouseController extends MouseAdapter {
 
+    private final double DELTA = 0.25;
+
     private final Cursor defCursor = Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR);
     private final Cursor hndCursor = Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR);
     private final Point pp;
@@ -32,6 +34,11 @@ public class BuilderMouseController extends MouseAdapter {
         this.builder = gModel;
         pp = new Point();
         edit = false;
+    }
+
+    @Override
+    public void mouseMoved(MouseEvent e) {
+        builder.fireCoordinates(Conversions.clickToGamePoint(builder.getPaper().getGridSize(), e).toString());
     }
 
     @Override
