@@ -70,7 +70,7 @@ public final class ApplicationWindow extends JFrame implements PropertyChangeLis
     }
 
     private void initWindow() {
-        setTitle("Formula Race 1.2");
+        setTitle("Formula Race 1.3");
         ImageIcon img = new ImageIcon(getClass().getClassLoader().getResource("Helmet 32x32.png"));
         setIconImage(img.getImage());
         setLayout(new BorderLayout());
@@ -96,7 +96,7 @@ public final class ApplicationWindow extends JFrame implements PropertyChangeLis
         TopMenuBar topMenu = new TopMenuBar(raceModel, builder);
         trackList = new TrackListComponent(raceModel, builder);
         JScrollPane trackSelectorPanel = new JScrollPane(trackList);
-        trackSelectorPanel.setPreferredSize(new Dimension(150, 0));
+        trackSelectorPanel.setPreferredSize(new Dimension(TrackListComponent.LIST_WIDTH, 0));
 
         leftPanel.add(topMenu, BorderLayout.NORTH);
         leftPanel.add(trackSelectorPanel, BorderLayout.CENTER);

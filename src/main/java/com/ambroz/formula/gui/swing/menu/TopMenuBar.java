@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Insets;
+import java.awt.Toolkit;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
@@ -17,6 +18,7 @@ import com.ambroz.formula.gamemodel.labels.GeneralLabels;
 import com.ambroz.formula.gamemodel.race.RaceModel;
 import com.ambroz.formula.gamemodel.track.TrackBuilder;
 import com.ambroz.formula.gui.swing.utils.Fonts;
+import com.ambroz.formula.gui.swing.windows.OptionsWindow;
 
 /**
  *
@@ -30,6 +32,7 @@ public final class TopMenuBar extends JMenuBar {
     private final RaceModel gameModel;
     private final TrackBuilder builder;
     private GeneralLabels optionsLabels;
+    private OptionsWindow optionsDiag;
 
     public TopMenuBar(RaceModel gModel, TrackBuilder trackBuilder) {
         this.gameModel = gModel;
@@ -41,16 +44,16 @@ public final class TopMenuBar extends JMenuBar {
     }
 
     private void initComponents() {
-//        optionsDiag = new OptionsWindow(gameModel);
+        optionsDiag = new OptionsWindow(gameModel);
         optionsMenu = new JMenu();
         optionsMenu.setFont(Fonts.MENU_FONT);
         optionsMenu.setText(optionsLabels.getValue(GeneralLabels.OPTIONS) + "...");
         optionsMenu.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent evt) {
-//                Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
-//                optionsDiag.setLocation(dim.width / 2 - optionsDiag.getWidth() / 2, dim.height / 2 - optionsDiag.getHeight() / 2);
-//                optionsDiag.setVisible(true);
+                Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+                optionsDiag.setLocation(dim.width / 2 - optionsDiag.getWidth() / 2, dim.height / 2 - optionsDiag.getHeight() / 2);
+                optionsDiag.setVisible(true);
             }
         });
 

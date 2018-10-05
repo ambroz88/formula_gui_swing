@@ -37,6 +37,7 @@ public final class TrackListComponent extends JPanel implements ListSelectionLis
 
     public static final int BUILD = 0;
     public static final int RACE = 1;
+    public static final int LIST_WIDTH = 150;
 
     private final RaceModel raceModel;
     private final TrackBuilder builder;

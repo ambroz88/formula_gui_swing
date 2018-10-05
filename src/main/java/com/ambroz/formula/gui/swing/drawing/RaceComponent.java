@@ -72,11 +72,13 @@ public class RaceComponent extends CoreDrawComponent implements PropertyChangeLi
             g.setColor(new Color(form.getColor()));
             double arrowAngle = 0.5;//0.5235; //in radians ~ 30°
             double arrowLength = 0.6 * gridSize;
-//            int formulaLength = form.getLength();
-//            if (formulaLength > gameModel.getTurnMaker().getLengthHist()) {
-//                formulaLength = gameModel.getTurnMaker().getLengthHist() + 1;
-//            }
-            for (int i = 0; i < form.getLength() - 1; i++) {
+
+            int formulaLength = form.getLength();
+            if (formulaLength > gameModel.getTurnMaker().getLengthHist()) {
+                formulaLength = gameModel.getTurnMaker().getLengthHist() + 1;
+            }
+
+            for (int i = form.getLength() - formulaLength; i < form.getLength() - 1; i++) {
                 //start of formula turn
                 Point start = new Point(form.getPoint(i).x * gridSize,
                         form.getPoint(i).y * gridSize);

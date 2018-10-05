@@ -12,6 +12,14 @@ import com.ambroz.formula.gamemodel.datamodel.Point;
  */
 public final class Conversions {
 
+    /**
+     * It converts panel coordinates to coordinates in grid.
+     * <br>E.g. when grid size is 10, Point[145;53] is converted into Point[15;5]
+     *
+     * @param gridSize is the size of the grid
+     * @param evt is MouseEvent of mouse adapter
+     * @return Point with grid coordinates
+     */
     public static Point clickToGamePoint(int gridSize, MouseEvent evt) {
         java.awt.Point dif = ((JViewport) evt.getSource()).getViewPosition();
         double roundX = Math.round((evt.getPoint().getX() + dif.getX()) / gridSize) * gridSize;

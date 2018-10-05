@@ -23,6 +23,7 @@ public class TrackBuilderComponent extends CoreDrawComponent implements Property
         super(trackBuilder);
         this.builder = trackBuilder;
         this.builder.addPropertyChangeListener(this);
+        this.builder.getPaper().addPropertyChangeListener(this);
         setBorder(new LineBorder(Color.black));
         updateSize();
     }
@@ -75,7 +76,11 @@ public class TrackBuilderComponent extends CoreDrawComponent implements Property
         if (evt.getPropertyName().equals("repaint")) {
             repaint();
         } else if (evt.getPropertyName().equals("grid")) {
-            repaint();
+            updateSize();
+        } else if (evt.getPropertyName().equals("paperWidth")) {
+            updateSize();
+        } else if (evt.getPropertyName().equals("paperHeight")) {
+            updateSize();
         }
     }
 
