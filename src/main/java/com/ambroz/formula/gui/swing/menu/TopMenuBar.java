@@ -17,6 +17,7 @@ import com.ambroz.formula.gamemodel.enums.Language;
 import com.ambroz.formula.gamemodel.labels.GeneralLabels;
 import com.ambroz.formula.gamemodel.race.RaceModel;
 import com.ambroz.formula.gamemodel.track.TrackBuilder;
+import com.ambroz.formula.gui.swing.components.TrackListComponent;
 import com.ambroz.formula.gui.swing.utils.Fonts;
 import com.ambroz.formula.gui.swing.windows.OptionsWindow;
 
@@ -39,7 +40,7 @@ public final class TopMenuBar extends JMenuBar {
         this.builder = trackBuilder;
         optionsLabels = new GeneralLabels(this.gameModel.getLanguage().toString());
         setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
-        setPreferredSize(new Dimension(200, 50));
+        setPreferredSize(new Dimension(TrackListComponent.LIST_WIDTH, 50));
         initComponents();
     }
 

@@ -5,8 +5,11 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
+import java.awt.GridLayout;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
@@ -21,6 +24,7 @@ import com.ambroz.formula.gamemodel.datamodel.Paper;
 import com.ambroz.formula.gamemodel.labels.GeneralLabels;
 import com.ambroz.formula.gamemodel.race.RaceModel;
 import com.ambroz.formula.gamemodel.track.TrackBuilder;
+import com.ambroz.formula.gui.swing.components.PlayerPanel;
 import com.ambroz.formula.gui.swing.components.TrackListComponent;
 import com.ambroz.formula.gui.swing.components.VerticalLabelUI;
 import com.ambroz.formula.gui.swing.drawing.RaceComponent;
@@ -42,9 +46,11 @@ public final class ApplicationWindow extends JFrame implements PropertyChangeLis
     private RaceModel raceModel;
     private TrackBuilder builder;
     private GeneralLabels generalLabels;
+    private List<PlayerPanel> playerList;
 
     private TrackListComponent trackList;
     private JTabbedPane tabs;
+    private JPanel playersPanel;
 
     public ApplicationWindow() {
         initWindow();
@@ -64,8 +70,8 @@ public final class ApplicationWindow extends JFrame implements PropertyChangeLis
         gameWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
-        int width = gd.getDisplayMode().getWidth();
-        int height = gd.getDisplayMode().getHeight();
+        int width = gd.getDisplayMode().getWidth() - 50;
+        int height = gd.getDisplayMode().getHeight() - 50;
         gameWindow.setSize(new Dimension(width, height));
     }
 
@@ -88,10 +94,12 @@ public final class ApplicationWindow extends JFrame implements PropertyChangeLis
         builder = new TrackBuilder(paper);
 
         generalLabels = new GeneralLabels(raceModel.getLanguage().toString());
+        playerList = new ArrayList<>();
     }
 
     private JPanel initLeftPanel() {
         JPanel leftPanel = new JPanel(new BorderLayout());
+        playersPanel = new JPanel();
 
         TopMenuBar topMenu = new TopMenuBar(raceModel, builder);
         trackList = new TrackListComponent(raceModel, builder);
@@ -100,6 +108,7 @@ public final class ApplicationWindow extends JFrame implements PropertyChangeLis
 
         leftPanel.add(topMenu, BorderLayout.NORTH);
         leftPanel.add(trackSelectorPanel, BorderLayout.CENTER);
+        leftPanel.add(playersPanel, BorderLayout.SOUTH);
         return leftPanel;
     }
 
@@ -113,8 +122,10 @@ public final class ApplicationWindow extends JFrame implements PropertyChangeLis
 
                 if (tabIndex == 0) {
                     trackList.setActiveTab(TrackListComponent.RACE);
+                    playersPanel.setVisible(true);
                 } else if (tabIndex == 1) {
                     trackList.setActiveTab(TrackListComponent.BUILD);
+                    playersPanel.setVisible(false);
                 }
 
             }
@@ -178,6 +189,22 @@ public final class ApplicationWindow extends JFrame implements PropertyChangeLis
             JLabel buildLabel = (JLabel) tabs.getTabComponentAt(1);
             buildLabel.setText(" " + generalLabels.getValue(GeneralLabels.BUILD_TRACK) + " ");
             tabs.setTabComponentAt(1, buildLabel);
+
+            for (PlayerPanel panel : playerList) {
+                panel.setLanguage(raceModel.getLanguage());
+            }
+        } else if (evt.getPropertyName().equals("newGame")) {
+            playersPanel.removeAll();
+            int racers = raceModel.getTurnMaker().getFormulaCount();
+            playersPanel.setLayout(new GridLayout(racers, 1));
+            PlayerPanel panel;
+
+            for (int i = 0; i < racers; i++) {
+                panel = new PlayerPanel(raceModel.getTurnMaker().getFormula(i + 1));
+                panel.setLanguage(raceModel.getLanguage());
+                playersPanel.add(panel);
+                playerList.add(panel);
+            }
         }
     }
 

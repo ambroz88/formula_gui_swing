@@ -37,12 +37,12 @@ public final class TrackListComponent extends JPanel implements ListSelectionLis
 
     public static final int BUILD = 0;
     public static final int RACE = 1;
-    public static final int LIST_WIDTH = 150;
+    public static final int LIST_WIDTH = 160;
 
     private final RaceModel raceModel;
     private final TrackBuilder builder;
-    private JLabel trackLabel;
     private GeneralLabels generalLabels;
+    private JLabel trackLabel;
     private JList<String> list;
     private int index;
     private int activeTab;
