@@ -17,6 +17,7 @@ import com.ambroz.formula.gamemodel.datamodel.PropertyChanger;
 import com.ambroz.formula.gamemodel.labels.StartMenuLabels;
 import com.ambroz.formula.gamemodel.race.RaceModel;
 import com.ambroz.formula.gui.swing.components.HintPanel;
+import com.ambroz.formula.gui.swing.windows.StartGameWindow;
 
 /**
  *
@@ -72,13 +73,17 @@ public class RaceMenuBar extends JMenuBar implements PropertyChangeListener {
         newGame.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent evt) {
-                raceModel.prepareGame(raceModel.getTrack());
+                if (!raceModel.getTrack().isEmpty()) {
+                    StartGameWindow window = new StartGameWindow(raceModel);
+                    window.setVisible(true);
+                }
             }
         });
         playAgain.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent evt) {
-                raceModel.prepareGame(raceModel.getTrack());
+                raceModel.resetPlayers();
+                raceModel.startGame();
             }
         });
     }
