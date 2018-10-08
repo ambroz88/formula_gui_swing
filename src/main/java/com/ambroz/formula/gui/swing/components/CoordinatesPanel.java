@@ -8,6 +8,7 @@ import java.beans.PropertyChangeListener;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import com.ambroz.formula.gamemodel.datamodel.PropertyChanger;
 import com.ambroz.formula.gamemodel.race.RaceModel;
 import com.ambroz.formula.gamemodel.track.TrackBuilder;
 import com.ambroz.formula.gui.swing.windows.OptionsWindow;
@@ -47,7 +48,7 @@ public class CoordinatesPanel extends JPanel implements PropertyChangeListener {
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-        if (evt.getPropertyName().equals("mouseMoving")) {
+        if (evt.getPropertyName().equals(PropertyChanger.MOUSE_MOVING)) {
             coordinates.setText(evt.getNewValue().toString());
         }
     }

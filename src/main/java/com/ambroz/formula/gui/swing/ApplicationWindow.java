@@ -13,7 +13,6 @@ import java.util.List;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
@@ -21,20 +20,13 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import com.ambroz.formula.gamemodel.datamodel.Paper;
-import com.ambroz.formula.gamemodel.labels.GeneralLabels;
+import com.ambroz.formula.gamemodel.datamodel.PropertyChanger;
 import com.ambroz.formula.gamemodel.race.RaceModel;
 import com.ambroz.formula.gamemodel.track.TrackBuilder;
 import com.ambroz.formula.gui.swing.components.PlayerPanel;
+import com.ambroz.formula.gui.swing.components.TabsComponent;
 import com.ambroz.formula.gui.swing.components.TrackListComponent;
-import com.ambroz.formula.gui.swing.components.VerticalLabelUI;
-import com.ambroz.formula.gui.swing.drawing.RaceComponent;
-import com.ambroz.formula.gui.swing.drawing.TrackBuilderComponent;
-import com.ambroz.formula.gui.swing.menu.BuilderMenuBar;
-import com.ambroz.formula.gui.swing.menu.RaceMenuBar;
 import com.ambroz.formula.gui.swing.menu.TopMenuBar;
-import com.ambroz.formula.gui.swing.tools.BuilderMouseController;
-import com.ambroz.formula.gui.swing.tools.RaceMouseController;
-import com.ambroz.formula.gui.swing.utils.Fonts;
 
 /**
  * Component that shows main window with track and formulas and toolbar.
@@ -45,7 +37,6 @@ public final class ApplicationWindow extends JFrame implements PropertyChangeLis
 
     private RaceModel raceModel;
     private TrackBuilder builder;
-    private GeneralLabels generalLabels;
     private List<PlayerPanel> playerList;
 
     private TrackListComponent trackList;
@@ -56,11 +47,9 @@ public final class ApplicationWindow extends JFrame implements PropertyChangeLis
         initWindow();
         initGameLogic();
 
-        JPanel leftPanel = initLeftPanel();
-        add(leftPanel, BorderLayout.WEST);
+        add(initLeftPanel(), BorderLayout.WEST);
 
         initTabs();
-
         add(tabs, BorderLayout.CENTER);
     }
 
@@ -92,8 +81,6 @@ public final class ApplicationWindow extends JFrame implements PropertyChangeLis
         raceModel.getTurnMaker().getFormula(1).setColor(Color.BLUE.getRGB());
 
         builder = new TrackBuilder(paper);
-
-        generalLabels = new GeneralLabels(raceModel.getLanguage().toString());
         playerList = new ArrayList<>();
     }
 
@@ -113,7 +100,7 @@ public final class ApplicationWindow extends JFrame implements PropertyChangeLis
     }
 
     private void initTabs() {
-        tabs = new JTabbedPane(JTabbedPane.LEFT);
+        tabs = new TabsComponent(raceModel, builder);
 
         tabs.addChangeListener(new ChangeListener() {
             @Override
@@ -123,84 +110,32 @@ public final class ApplicationWindow extends JFrame implements PropertyChangeLis
                 if (tabIndex == 0) {
                     trackList.setActiveTab(TrackListComponent.RACE);
                     playersPanel.setVisible(true);
+                    trackList.setCoordinatesVisibility(false);
                 } else if (tabIndex == 1) {
                     trackList.setActiveTab(TrackListComponent.BUILD);
                     playersPanel.setVisible(false);
+                    trackList.setCoordinatesVisibility(true);
                 }
 
             }
         });
 
-        JPanel scrollDrawPanel = createDrawPanel();
-        JPanel trackBuilderPanel = createTrackBuilderPanel();
-        tabs.addTab(null, scrollDrawPanel);
-        tabs.addTab(null, trackBuilderPanel);
-
-        tabs.setTabComponentAt(0, createVerticalLabel(" " + generalLabels.getValue(GeneralLabels.PLAY_GAME) + " "));
-        tabs.setTabComponentAt(1, createVerticalLabel(" " + generalLabels.getValue(GeneralLabels.BUILD_TRACK) + " "));
-    }
-
-    private JPanel createDrawPanel() {
-        RaceMenuBar raceBar = new RaceMenuBar(raceModel);
-        RaceComponent drawPanel = new RaceComponent(raceModel);
-
-        JScrollPane scroll = new JScrollPane(drawPanel);
-        RaceMouseController scrollListener = new RaceMouseController(drawPanel, raceModel);
-        scroll.getViewport().addMouseMotionListener(scrollListener);
-        scroll.getViewport().addMouseListener(scrollListener);
-
-        JPanel racePanel = new JPanel(new BorderLayout());
-        racePanel.add(raceBar, BorderLayout.NORTH);
-        racePanel.add(scroll, BorderLayout.CENTER);
-        return racePanel;
-    }
-
-    private JPanel createTrackBuilderPanel() {
-        BuilderMenuBar builderBar = new BuilderMenuBar(builder);
-        TrackBuilderComponent drawPanel = new TrackBuilderComponent(builder);
-
-        JScrollPane scroll = new JScrollPane(drawPanel);
-        BuilderMouseController scrollListener = new BuilderMouseController(drawPanel, builder);
-        scroll.getViewport().addMouseMotionListener(scrollListener);
-        scroll.getViewport().addMouseListener(scrollListener);
-
-        JPanel builderPanel = new JPanel(new BorderLayout());
-        builderPanel.add(builderBar, BorderLayout.NORTH);
-        builderPanel.add(scroll, BorderLayout.CENTER);
-        return builderPanel;
-    }
-
-    private JLabel createVerticalLabel(String title) {
-        JLabel labelGame = new JLabel(title);
-        labelGame.setUI(new VerticalLabelUI(false));
-        labelGame.setFont(Fonts.MENU_FONT);
-        return labelGame;
     }
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-        if (evt.getPropertyName().equals("language")) {
-            generalLabels = new GeneralLabels(raceModel.getLanguage().toString());
-
-            JLabel raceLabel = (JLabel) tabs.getTabComponentAt(0);
-            raceLabel.setText(" " + generalLabels.getValue(GeneralLabels.PLAY_GAME) + " ");
-            tabs.setTabComponentAt(0, raceLabel);
-
-            JLabel buildLabel = (JLabel) tabs.getTabComponentAt(1);
-            buildLabel.setText(" " + generalLabels.getValue(GeneralLabels.BUILD_TRACK) + " ");
-            tabs.setTabComponentAt(1, buildLabel);
-
+        if (evt.getPropertyName().equals(PropertyChanger.LANGUAGE)) {
             for (PlayerPanel panel : playerList) {
                 panel.setLanguage(raceModel.getLanguage());
             }
-        } else if (evt.getPropertyName().equals("newGame")) {
+        } else if (evt.getPropertyName().equals(PropertyChanger.RACE_NEW_GAME)) {
             playersPanel.removeAll();
             int racers = raceModel.getTurnMaker().getFormulaCount();
             playersPanel.setLayout(new GridLayout(racers, 1));
             PlayerPanel panel;
 
-            for (int i = 0; i < racers; i++) {
-                panel = new PlayerPanel(raceModel.getTurnMaker().getFormula(i + 1));
+            for (int i = 1; i <= racers; i++) {
+                panel = new PlayerPanel(raceModel.getTurnMaker().getFormula(i));
                 panel.setLanguage(raceModel.getLanguage());
                 playersPanel.add(panel);
                 playerList.add(panel);

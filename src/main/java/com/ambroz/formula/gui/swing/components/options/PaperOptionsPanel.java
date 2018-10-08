@@ -1,4 +1,4 @@
-package com.ambroz.formula.gui.swing.components;
+package com.ambroz.formula.gui.swing.components.options;
 
 import java.awt.Dimension;
 import java.awt.Font;
@@ -18,6 +18,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import com.ambroz.formula.gamemodel.datamodel.Paper;
+import com.ambroz.formula.gamemodel.datamodel.PropertyChanger;
 import com.ambroz.formula.gamemodel.labels.OptionsLabels;
 import com.ambroz.formula.gamemodel.race.RaceModel;
 import com.ambroz.formula.gui.swing.windows.OptionsWindow;
@@ -153,30 +154,25 @@ public class PaperOptionsPanel extends JPanel implements PropertyChangeListener 
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-        switch (evt.getPropertyName()) {
-            case "paperWidth":
-                setModel = false;
-                paperWidth.setValue(evt.getNewValue());
-                setModel = true;
-                break;
-            case "paperHeight":
-                setModel = false;
-                paperHeight.setValue(evt.getNewValue());
-                setModel = true;
-                break;
-            case "grid":
-                setModel = false;
-                gridSpinner.setValue(evt.getNewValue());
-                setModel = true;
-                break;
-            case "language":
-                optionLabels = new OptionsLabels(raceModel.getLanguage().toString());
-                setBorder(BorderFactory.createTitledBorder(null, optionLabels.getValue(OptionsLabels.PAPER_TITLE), TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, new Font("Arial", 0, 14)));
+        if (evt.getPropertyName().equals(PropertyChanger.PAPER_WIDTH)) {
+            setModel = false;
+            paperWidth.setValue(evt.getNewValue());
+            setModel = true;
+        } else if (evt.getPropertyName().equals(PropertyChanger.PAPER_HEIGHT)) {
+            setModel = false;
+            paperHeight.setValue(evt.getNewValue());
+            setModel = true;
+        } else if (evt.getPropertyName().equals(PropertyChanger.PAPER_GRID)) {
+            setModel = false;
+            gridSpinner.setValue(evt.getNewValue());
+            setModel = true;
+        } else if (evt.getPropertyName().equals(PropertyChanger.LANGUAGE)) {
+            optionLabels = new OptionsLabels(raceModel.getLanguage().toString());
+            setBorder(BorderFactory.createTitledBorder(null, optionLabels.getValue(OptionsLabels.PAPER_TITLE), TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, new Font("Arial", 0, 14)));
 
-                labelGrid.setText(optionLabels.getValue(OptionsLabels.PAPER_SIZE));
-                labelHeight.setText(optionLabels.getValue(OptionsLabels.PAPER_HEIGHT));
-                labelWidth.setText(optionLabels.getValue(OptionsLabels.PAPER_WIDTH));
-                break;
+            labelGrid.setText(optionLabels.getValue(OptionsLabels.PAPER_SIZE));
+            labelHeight.setText(optionLabels.getValue(OptionsLabels.PAPER_HEIGHT));
+            labelWidth.setText(optionLabels.getValue(OptionsLabels.PAPER_WIDTH));
         }
     }
 

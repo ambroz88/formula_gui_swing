@@ -11,6 +11,7 @@ import java.util.List;
 import javax.swing.border.LineBorder;
 
 import com.ambroz.formula.gamemodel.datamodel.Point;
+import com.ambroz.formula.gamemodel.datamodel.PropertyChanger;
 import com.ambroz.formula.gamemodel.race.Formula;
 import com.ambroz.formula.gamemodel.race.RaceModel;
 import com.ambroz.formula.gamemodel.race.Turn;
@@ -56,10 +57,10 @@ public class RaceComponent extends CoreDrawComponent implements PropertyChangeLi
 
     private void drawFormulaTurn(Graphics2D g2) {
         g2.setStroke(new BasicStroke(2));
-        drawFormula(g2, gameModel.getTurnMaker().getFormula(1));
+        drawFormula(g2, gameModel.getTurnMaker().getActiveFormula());
 
         //draw points:
-        Color colorPoints = new Color(gameModel.getTurnMaker().getFormula(1).getColor());
+        Color colorPoints = new Color(gameModel.getTurnMaker().getActiveFormula().getColor());
         g2.setColor(colorPoints);
         if (gameModel.getStage() >= RaceModel.FIRST_TURN) {
             drawTurns(g2);
@@ -112,17 +113,13 @@ public class RaceComponent extends CoreDrawComponent implements PropertyChangeLi
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-        if (evt.getPropertyName().equals("repaint")) {
+        if (evt.getPropertyName().equals(PropertyChanger.REPAINT)) {
             repaint();
-        } else if (evt.getPropertyName().contains("startDraw")) {
-            repaint();
-        } else if (evt.getPropertyName().equals("startGame")) {
-            repaint();
-        } else if (evt.getPropertyName().equals("grid")) {
+        } else if (evt.getPropertyName().equals(PropertyChanger.PAPER_GRID)) {
             updateSize();
-        } else if (evt.getPropertyName().equals("paperWidth")) {
+        } else if (evt.getPropertyName().equals(PropertyChanger.PAPER_WIDTH)) {
             updateSize();
-        } else if (evt.getPropertyName().equals("paperHeight")) {
+        } else if (evt.getPropertyName().equals(PropertyChanger.PAPER_HEIGHT)) {
             updateSize();
         }
     }

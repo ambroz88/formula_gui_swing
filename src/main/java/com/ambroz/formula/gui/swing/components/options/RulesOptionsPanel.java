@@ -1,4 +1,4 @@
-package com.ambroz.formula.gui.swing.components;
+package com.ambroz.formula.gui.swing.components.options;
 
 import java.awt.Dimension;
 import java.awt.Font;
@@ -20,6 +20,7 @@ import javax.swing.JRadioButton;
 import javax.swing.LayoutStyle;
 import javax.swing.border.TitledBorder;
 
+import com.ambroz.formula.gamemodel.datamodel.PropertyChanger;
 import com.ambroz.formula.gamemodel.labels.OptionsLabels;
 import com.ambroz.formula.gamemodel.race.RaceModel;
 import com.ambroz.formula.gamemodel.race.TurnMaker;
@@ -170,9 +171,10 @@ public class RulesOptionsPanel extends JPanel implements PropertyChangeListener 
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-        if (evt.getPropertyName().equals("language")) {
+        if (evt.getPropertyName().equals(PropertyChanger.LANGUAGE)) {
             optionLabels = new OptionsLabels(model.getLanguage().toString());
             setBorder(BorderFactory.createTitledBorder(null, optionLabels.getValue(OptionsLabels.RULE_TITLE), TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Arial", 0, 14)));
+
             labelTurns.setText(optionLabels.getValue(OptionsLabels.NO_TURNS));
             labelFinish.setText(optionLabels.getValue(OptionsLabels.END_RULES));
             firstWins.setText(optionLabels.getValue(OptionsLabels.RULE_FIRST));

@@ -16,6 +16,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JPanel;
 import javax.swing.JSeparator;
 
+import com.ambroz.formula.gamemodel.datamodel.PropertyChanger;
 import com.ambroz.formula.gamemodel.enums.Side;
 import com.ambroz.formula.gamemodel.labels.TrackMenuLabels;
 import com.ambroz.formula.gamemodel.track.TrackBuilder;
@@ -42,7 +43,6 @@ public final class BuilderMenuBar extends JMenuBar implements PropertyChangeList
 
     public BuilderMenuBar(TrackBuilder gModel) {
         this.builder = gModel;
-        this.builder.addPropertyChangeListener(this);
         builderMenuLabels = new TrackMenuLabels(this.builder.getLanguage().toString());
 
         initComponents();
@@ -97,6 +97,8 @@ public final class BuilderMenuBar extends JMenuBar implements PropertyChangeList
     }
 
     private void addActions() {
+        builder.addPropertyChangeListener(this);
+
         createLeft.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent evt) {
@@ -173,10 +175,10 @@ public final class BuilderMenuBar extends JMenuBar implements PropertyChangeList
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-        if (evt.getPropertyName().equals("language")) {
+        if (evt.getPropertyName().equals(PropertyChanger.LANGUAGE)) {
             builderMenuLabels = new TrackMenuLabels(builder.getLanguage().toString());
             addToolTips();
-        } else if (evt.getPropertyName().equals("trackReady")) {
+        } else if (evt.getPropertyName().equals(PropertyChanger.TRACK_READY)) {
             saveTrack.setEnabled((Boolean) evt.getNewValue());
             switchStart.setEnabled((Boolean) evt.getNewValue());
         }

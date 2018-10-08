@@ -13,6 +13,7 @@ import javax.swing.JButton;
 import javax.swing.JMenuBar;
 import javax.swing.JPanel;
 
+import com.ambroz.formula.gamemodel.datamodel.PropertyChanger;
 import com.ambroz.formula.gamemodel.labels.StartMenuLabels;
 import com.ambroz.formula.gamemodel.race.RaceModel;
 import com.ambroz.formula.gui.swing.components.HintPanel;
@@ -31,7 +32,6 @@ public class RaceMenuBar extends JMenuBar implements PropertyChangeListener {
 
     public RaceMenuBar(RaceModel model) {
         this.raceModel = model;
-        this.raceModel.addPropertyChangeListener(this);
         startLabels = new StartMenuLabels(this.raceModel.getLanguage().toString());
 
         initComponents();
@@ -67,6 +67,8 @@ public class RaceMenuBar extends JMenuBar implements PropertyChangeListener {
     }
 
     private void addActions() {
+        raceModel.addPropertyChangeListener(this);
+
         newGame.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent evt) {
@@ -92,7 +94,7 @@ public class RaceMenuBar extends JMenuBar implements PropertyChangeListener {
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-        if (evt.getPropertyName().equals("language")) {
+        if (evt.getPropertyName().equals(PropertyChanger.LANGUAGE)) {
             startLabels = new StartMenuLabels(raceModel.getLanguage().toString());
             addToolTips();
         }

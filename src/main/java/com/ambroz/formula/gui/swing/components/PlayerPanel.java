@@ -18,6 +18,7 @@ import javax.swing.JPanel;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.LineBorder;
 
+import com.ambroz.formula.gamemodel.datamodel.PropertyChanger;
 import com.ambroz.formula.gamemodel.enums.Language;
 import com.ambroz.formula.gamemodel.labels.StatisticLabels;
 import com.ambroz.formula.gamemodel.race.Formula;
@@ -175,25 +176,18 @@ public class PlayerPanel extends JPanel implements PropertyChangeListener {
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-        switch (evt.getPropertyName()) {
-            case "move":
-                updateMoves();
-                break;
-            case "dist":
-                updateDistance();
-                break;
-            case "reset":
-                reset();
-                break;
-            case "name":
-                updatePlayerName();
-                break;
-            case "color":
-                updateColor();
-                break;
-            case "stop":
+        if (evt.getPropertyName().equals(PropertyChanger.FORMULA_MOVES)) {
+            updateMoves();
+        } else if (evt.getPropertyName().equals(PropertyChanger.FORMULA_DISTANCE)) {
+            updateDistance();
+        } else if (evt.getPropertyName().equals(PropertyChanger.FORMULA_RESET)) {
+            reset();
+        } else if (evt.getPropertyName().equals(PropertyChanger.FORMULA_NAME)) {
+            updatePlayerName();
+        } else if (evt.getPropertyName().equals(PropertyChanger.FORMULA_COLOUR)) {
+            updateColor();
+        } else if (evt.getPropertyName().equals(PropertyChanger.FORMULA_WAIT)) {
 //                updateWait();
-                break;
         }
     }
 

@@ -1,4 +1,4 @@
-package com.ambroz.formula.gui.swing.components;
+package com.ambroz.formula.gui.swing.components.options;
 
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -15,6 +15,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.TitledBorder;
 
+import com.ambroz.formula.gamemodel.datamodel.PropertyChanger;
 import com.ambroz.formula.gamemodel.labels.OptionsLabels;
 import com.ambroz.formula.gamemodel.race.RaceModel;
 import com.ambroz.formula.gamemodel.race.TurnMaker;
@@ -76,7 +77,7 @@ public final class PlayersOptionsPanel extends JPanel implements PropertyChangeL
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-        if (evt.getPropertyName().equals("language")) {
+        if (evt.getPropertyName().equals(PropertyChanger.LANGUAGE)) {
             optionLabels = new OptionsLabels(model.getLanguage().toString());
             setBorder(BorderFactory.createTitledBorder(null, optionLabels.getValue(OptionsLabels.PLAYERS), TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, new Font("Arial", 0, 14))); // NOI18N
             labelShowTurns.setText(optionLabels.getValue(OptionsLabels.SHOW_TURNS));

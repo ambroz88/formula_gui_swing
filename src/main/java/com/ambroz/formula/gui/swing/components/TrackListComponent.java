@@ -10,9 +10,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.util.List;
 
-import javax.swing.DefaultListModel;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
@@ -20,6 +18,7 @@ import javax.swing.border.LineBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import com.ambroz.formula.gamemodel.datamodel.PropertyChanger;
 import com.ambroz.formula.gamemodel.labels.GeneralLabels;
 import com.ambroz.formula.gamemodel.labels.HintLabels;
 import com.ambroz.formula.gamemodel.race.RaceModel;
@@ -35,50 +34,47 @@ import com.ambroz.formula.gui.swing.windows.ConfirmWindow;
  */
 public final class TrackListComponent extends JPanel implements ListSelectionListener, PropertyChangeListener {
 
-    public static final int BUILD = 0;
-    public static final int RACE = 1;
+    public static final int BUILD = 1;
+    public static final int RACE = 0;
     public static final int LIST_WIDTH = 160;
 
     private final RaceModel raceModel;
     private final TrackBuilder builder;
     private GeneralLabels generalLabels;
+    private CoordinatesPanel coordinates;
     private JLabel trackLabel;
     private JList<String> list;
-    private int index;
     private int activeTab;
 
     public TrackListComponent(RaceModel gameModel, TrackBuilder trackBuilder) {
         setLayout(new BorderLayout());
         setBorder(new LineBorder(Color.BLACK, 1));
 
-        this.raceModel = gameModel;
-        this.raceModel.addPropertyChangeListener(this);
-        this.builder = trackBuilder;
-        this.builder.addPropertyChangeListener(this);
-
+        raceModel = gameModel;
+        builder = trackBuilder;
         generalLabels = new GeneralLabels(raceModel.getLanguage().toString());
-        index = -1;
 
-        initTrackTitle();
-        initTrackList();
-        updateTracks();
-
-        add(trackLabel, BorderLayout.NORTH);
-        add(list, BorderLayout.CENTER);
-        add(new CoordinatesPanel(raceModel, builder), BorderLayout.SOUTH);
+        initComponents();
+        addActions();
+        addComponentsToPanel();
     }
 
-    private void initTrackTitle() {
+    private void initComponents() {
         trackLabel = new JLabel(generalLabels.getValue(GeneralLabels.TRACK_TITLE));
         trackLabel.setPreferredSize(new Dimension(145, 30));
         trackLabel.setFont(Fonts.TITLE_FONT);
+
+        list = new JList(TrackIO.getTracksArray());
+        list.setLayout(new FlowLayout(FlowLayout.CENTER));
+
+        coordinates = new CoordinatesPanel(raceModel, builder);
     }
 
-    private void initTrackList() {
-        list = new JList<>();
-        list.setLayout(new FlowLayout(FlowLayout.CENTER));
-        list.addListSelectionListener(this);
+    private void addActions() {
+        this.raceModel.addPropertyChangeListener(this);
+        this.builder.addPropertyChangeListener(this);
 
+        list.addListSelectionListener(this);
         // Delete track when Delete is pressed
         list.addKeyListener(new KeyListener() {
             @Override
@@ -101,40 +97,33 @@ public final class TrackListComponent extends JPanel implements ListSelectionLis
         });
     }
 
+    private void addComponentsToPanel() {
+        add(trackLabel, BorderLayout.NORTH);
+        add(list, BorderLayout.CENTER);
+        add(coordinates, BorderLayout.SOUTH);
+    }
+
     private void updateTracks() {
-        List<String> tracks = TrackIO.getAvailableTracks();
-
-        DefaultListModel<String> listModel = new DefaultListModel<>();
-        for (String track : tracks) {
-            listModel.addElement(track);
-        }
-
-        list.setModel(listModel);
-        repaint();
+        list.setListData(TrackIO.getTracksArray());
     }
 
     @Override
     public void valueChanged(ListSelectionEvent e) {
-        if (this.raceModel != null) {
-            if (e.getFirstIndex() != index) {
-                index = e.getFirstIndex();
-                if (getActiveTab() == RACE) {
-                    if (this.raceModel.getStage() > RaceModel.FIRST_TURN) {
-                        callConfirmWindow();
-                    } else {
-                        loadTrackForRace();
-                    }
-                } else if (getActiveTab() == BUILD) {
-                    loadTrackForBuilding();
-                }
+        if (getActiveTab() == RACE) {
+
+            if (raceModel.getStage() > RaceModel.FIRST_TURN) {
+                callConfirmWindow();
             } else {
-                index = -1;
+                loadTrackForRace();
             }
+
+        } else if (getActiveTab() == BUILD) {
+            loadTrackForBuilding();
         }
     }
 
     private void callConfirmWindow() throws HeadlessException {
-        ConfirmWindow conf = new ConfirmWindow(this.raceModel);
+        ConfirmWindow conf = new ConfirmWindow(raceModel);
         Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
         conf.setLocation(dim.width / 2 - conf.getWidth() / 2, dim.height / 2 - conf.getHeight() / 2);
         conf.setVisible(true);
@@ -167,18 +156,8 @@ public final class TrackListComponent extends JPanel implements ListSelectionLis
         }
     }
 
-    @Override
-    public void propertyChange(PropertyChangeEvent evt) {
-        if (evt.getPropertyName().equals("newTrack")) {
-            updateTracks();
-            revalidate();
-            repaint();
-        } else if (evt.getPropertyName().equals("loadTrack")) {
-            loadTrackForRace();
-        } else if (evt.getPropertyName().equals("language")) {
-            generalLabels = new GeneralLabels(raceModel.getLanguage().toString());
-            trackLabel.setText(generalLabels.getValue(GeneralLabels.TRACK_TITLE));
-        }
+    public void setCoordinatesVisibility(boolean visibility) {
+        coordinates.setVisible(visibility);
     }
 
     public int getActiveTab() {
@@ -187,6 +166,18 @@ public final class TrackListComponent extends JPanel implements ListSelectionLis
 
     public void setActiveTab(int activeTab) {
         this.activeTab = activeTab;
+    }
+
+    @Override
+    public void propertyChange(PropertyChangeEvent evt) {
+        if (evt.getPropertyName().equals(PropertyChanger.TRACK_SAVED)) {
+            updateTracks();
+        } else if (evt.getPropertyName().equals(PropertyChanger.RACE_LOAD_TRACK)) {
+            loadTrackForRace();
+        } else if (evt.getPropertyName().equals(PropertyChanger.LANGUAGE)) {
+            generalLabels = new GeneralLabels(raceModel.getLanguage().toString());
+            trackLabel.setText(generalLabels.getValue(GeneralLabels.TRACK_TITLE));
+        }
     }
 
 }

@@ -9,6 +9,7 @@ import java.beans.PropertyChangeListener;
 import javax.swing.border.LineBorder;
 
 import com.ambroz.formula.gamemodel.datamodel.Polyline;
+import com.ambroz.formula.gamemodel.datamodel.PropertyChanger;
 import com.ambroz.formula.gamemodel.track.TrackBuilder;
 
 /**
@@ -73,13 +74,13 @@ public class TrackBuilderComponent extends CoreDrawComponent implements Property
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-        if (evt.getPropertyName().equals("repaint")) {
+        if (evt.getPropertyName().equals(PropertyChanger.REPAINT)) {
             repaint();
-        } else if (evt.getPropertyName().equals("grid")) {
+        } else if (evt.getPropertyName().equals(PropertyChanger.PAPER_GRID)) {
             updateSize();
-        } else if (evt.getPropertyName().equals("paperWidth")) {
+        } else if (evt.getPropertyName().equals(PropertyChanger.PAPER_WIDTH)) {
             updateSize();
-        } else if (evt.getPropertyName().equals("paperHeight")) {
+        } else if (evt.getPropertyName().equals(PropertyChanger.PAPER_HEIGHT)) {
             updateSize();
         }
     }

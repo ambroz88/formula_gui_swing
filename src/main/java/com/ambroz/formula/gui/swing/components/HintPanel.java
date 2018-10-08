@@ -11,6 +11,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import com.ambroz.formula.gamemodel.datamodel.CoreModel;
+import com.ambroz.formula.gamemodel.datamodel.PropertyChanger;
 import com.ambroz.formula.gui.swing.utils.Fonts;
 
 /**
@@ -38,13 +39,13 @@ public class HintPanel extends JPanel implements PropertyChangeListener {
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-        if (evt.getPropertyName().equals("hint")) {
+        if (evt.getPropertyName().equals(PropertyChanger.HINT)) {
             hintLabel.setText((String) evt.getNewValue());
             hintLabel.setFont(Fonts.MENU_FONT);
-        } else if (evt.getPropertyName().equals("winner")) {
+        } else if (evt.getPropertyName().equals(PropertyChanger.RACE_WINNER)) {
             hintLabel.setText((String) evt.getNewValue());
             hintLabel.setFont(new Font("Arial", 0, 24));
-        } else if (evt.getPropertyName().equals("crash")) {
+        } else if (evt.getPropertyName().equals(PropertyChanger.RACE_CRASH)) {
             hintLabel.setText((String) evt.getNewValue());
             hintLabel.setFont(new Font("Arial", 0, 20));
         }

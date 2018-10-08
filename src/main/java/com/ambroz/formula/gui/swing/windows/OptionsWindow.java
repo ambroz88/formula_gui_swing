@@ -17,9 +17,9 @@ import javax.swing.KeyStroke;
 
 import com.ambroz.formula.gamemodel.labels.OptionsLabels;
 import com.ambroz.formula.gamemodel.race.RaceModel;
-import com.ambroz.formula.gui.swing.components.PaperOptionsPanel;
-import com.ambroz.formula.gui.swing.components.PlayersOptionsPanel;
-import com.ambroz.formula.gui.swing.components.RulesOptionsPanel;
+import com.ambroz.formula.gui.swing.components.options.PaperOptionsPanel;
+import com.ambroz.formula.gui.swing.components.options.PlayersOptionsPanel;
+import com.ambroz.formula.gui.swing.components.options.RulesOptionsPanel;
 
 /**
  *
