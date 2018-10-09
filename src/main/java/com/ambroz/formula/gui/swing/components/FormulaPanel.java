@@ -29,7 +29,7 @@ import com.ambroz.formula.gui.swing.windows.OptionsWindow;
  *
  * @author Jiri Ambroz <ambroz88@seznam.cz>
  */
-public class PlayerPanel extends JPanel implements PropertyChangeListener {
+public class FormulaPanel extends JPanel implements PropertyChangeListener {
 
     private static final int PANEL_HEIGHT = 85;
 
@@ -42,7 +42,7 @@ public class PlayerPanel extends JPanel implements PropertyChangeListener {
     private JLabel waits;
     private JPanel colorPanel;
 
-    public PlayerPanel(Formula formulaModel) {
+    public FormulaPanel(Formula formulaModel) {
         this.model = formulaModel;
 
         initComponents();

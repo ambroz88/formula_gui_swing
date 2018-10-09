@@ -109,16 +109,18 @@ public final class TrackListComponent extends JPanel implements ListSelectionLis
 
     @Override
     public void valueChanged(ListSelectionEvent e) {
-        if (getActiveTab() == RACE) {
+        if (!e.getValueIsAdjusting()) {
+            if (getActiveTab() == RACE) {
 
-            if (raceModel.getStage() > RaceModel.FIRST_TURN) {
-                callConfirmWindow();
-            } else {
-                loadTrackForRace();
+                if (raceModel.getStage() > RaceModel.FIRST_TURN) {
+                    callConfirmWindow();
+                } else {
+                    loadTrackForRace();
+                }
+
+            } else if (getActiveTab() == BUILD) {
+                loadTrackForBuilding();
             }
-
-        } else if (getActiveTab() == BUILD) {
-            loadTrackForBuilding();
         }
     }
 

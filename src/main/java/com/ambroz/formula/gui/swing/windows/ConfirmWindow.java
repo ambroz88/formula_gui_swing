@@ -1,11 +1,14 @@
 package com.ambroz.formula.gui.swing.windows;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
 import javax.swing.AbstractAction;
@@ -35,29 +38,66 @@ public final class ConfirmWindow extends JDialog {
     /**
      * A return status code - returned if Cancel button has been pressed
      */
-    public static final int RET_NO = 0;
+    private static final int RET_NO = 0;
     /**
      * A return status code - returned if OK button has been pressed
      */
-    public static final int RET_YES = 1;
+    private static final int RET_YES = 1;
+
     private final RaceModel model;
     private final DialogLabels dialogLabels;
     private JTextArea hintLabel;
-    private JButton noButton, yesButton;
+    private JButton noButton;
+    private JButton yesButton;
 
-    public ConfirmWindow(RaceModel model) {
-        super();
-        this.model = model;
-        dialogLabels = new DialogLabels(this.model.getLanguage().toString());
+    public ConfirmWindow(RaceModel raceModel) {
+        this.model = raceModel;
+        dialogLabels = new DialogLabels(model.getLanguage().toString());
 
+        initDialog();
+
+        initComponents();
+        addActions();
+        addComponentsToDialog();
+
+        pack();
+    }
+
+    private void initDialog() throws SecurityException {
         setPreferredSize(new Dimension(340, 115));
-        setLayout(new BorderLayout());
         setLayout(new FlowLayout(FlowLayout.CENTER, 0, 5));
         setTitle(dialogLabels.getValue(DialogLabels.ATTENTION));
         setAlwaysOnTop(true);
         setResizable(false);
+    }
 
-        initComponents();
+    private void initComponents() {
+        yesButton = new JButton(dialogLabels.getValue(DialogLabels.YES));
+        getRootPane().setDefaultButton(yesButton);
+        noButton = new JButton(dialogLabels.getValue(DialogLabels.NO));
+
+        StyledDocument doc = new DefaultStyledDocument();
+        SimpleAttributeSet center = new SimpleAttributeSet();
+        StyleConstants.setAlignment(center, StyleConstants.ALIGN_CENTER);
+        doc.setParagraphAttributes(0, doc.getLength(), center, false);
+
+        hintLabel = new JTextArea(doc);
+        hintLabel.setEditable(false);
+        hintLabel.setBackground(new Color(240, 240, 240));
+        hintLabel.setFont(new Font("Tahoma", 0, 12));
+        hintLabel.setText(dialogLabels.getValue(DialogLabels.CONDITION)
+                + "\n" + dialogLabels.getValue(DialogLabels.EVENT));
+
+    }
+
+    private void addActions() {
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent evt) {
+                closeDialog();
+            }
+        });
+
         // Close the dialog when Esc is pressed
         String cancelName = "cancel";
         InputMap inputMap = getRootPane().getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
@@ -69,69 +109,44 @@ public final class ConfirmWindow extends JDialog {
                 doClose(RET_NO);
             }
         });
-    }
-
-    // <editor-fold defaultstate="collapsed" desc="Initialization of GUI">
-    private void initComponents() {
-        yesButton = new JButton(dialogLabels.getValue(DialogLabels.YES));
-        noButton = new JButton(dialogLabels.getValue(DialogLabels.NO));
-
-        addWindowListener(new java.awt.event.WindowAdapter() {
-            @Override
-            public void windowClosing(java.awt.event.WindowEvent evt) {
-                closeDialog(evt);
-            }
-        });
 
         yesButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent evt) {
-                yesButtonActionPerformed(evt);
+                yesButtonActionPerformed();
             }
         });
 
         noButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent evt) {
-                noButtonActionPerformed(evt);
+                noButtonActionPerformed();
             }
         });
 
-        StyledDocument doc = new DefaultStyledDocument();
-        SimpleAttributeSet center = new SimpleAttributeSet();
-        StyleConstants.setAlignment(center, StyleConstants.ALIGN_CENTER);
-        doc.setParagraphAttributes(0, doc.getLength(), center, false);
+    }
 
-        hintLabel = new JTextArea(doc);
-        hintLabel.setEditable(false);
-        hintLabel.setBackground(new java.awt.Color(240, 240, 240));
-        hintLabel.setFont(new java.awt.Font("Tahoma", 0, 12));
-        hintLabel.setText(dialogLabels.getValue(DialogLabels.CONDITION)
-                + "\n" + dialogLabels.getValue(DialogLabels.EVENT));
-
+    private void addComponentsToDialog() {
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 40, 0));
         buttonPanel.add(yesButton);
         buttonPanel.add(noButton);
 
         add(hintLabel, BorderLayout.CENTER);
         add(buttonPanel, BorderLayout.SOUTH);
+    }
 
-        getRootPane().setDefaultButton(noButton);
-        pack();
-    }// </editor-fold>
-
-    private void yesButtonActionPerformed(ActionEvent evt) {
+    private void yesButtonActionPerformed() {
         doClose(RET_YES);
     }
 
-    private void noButtonActionPerformed(ActionEvent evt) {
+    private void noButtonActionPerformed() {
         doClose(RET_NO);
     }
 
     /**
      * Closes the dialog
      */
-    private void closeDialog(WindowEvent evt) {
+    private void closeDialog() {
         doClose(RET_NO);
     }
 

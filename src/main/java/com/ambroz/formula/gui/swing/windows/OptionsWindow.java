@@ -11,7 +11,7 @@ import javax.swing.AbstractAction;
 import javax.swing.ActionMap;
 import javax.swing.InputMap;
 import javax.swing.JComponent;
-import javax.swing.JFrame;
+import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.KeyStroke;
 
@@ -25,7 +25,7 @@ import com.ambroz.formula.gui.swing.components.options.RulesOptionsPanel;
  *
  * @author Jiri Ambroz <ambroz88@seznam.cz>
  */
-public final class OptionsWindow extends JFrame implements PropertyChangeListener {
+public final class OptionsWindow extends JDialog implements PropertyChangeListener {
 
     public static final int OPTIONS_WIDTH = 260;
     public static final int OPTIONS_HEIGHT = 450;
@@ -42,15 +42,19 @@ public final class OptionsWindow extends JFrame implements PropertyChangeListene
         this.raceModel = gameModel;
         optionLabels = new OptionsLabels(raceModel.getLanguage().toString());
 
+        initDialog();
+        initComponents();
+
+        addActions();
+        addComponents();
+    }
+
+    private void initDialog() throws SecurityException {
         setTitle(optionLabels.getValue(OptionsLabels.TITLE));
         setAlwaysOnTop(true);
         setResizable(false);
         setLayout(new FlowLayout(FlowLayout.LEFT, 15, 15));
         setPreferredSize(new Dimension(OPTIONS_WIDTH, OPTIONS_HEIGHT));
-
-        initComponents();
-        addActions();
-        addComponents();
     }
 
     private void initComponents() {

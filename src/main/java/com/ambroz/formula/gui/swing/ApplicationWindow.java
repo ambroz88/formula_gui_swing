@@ -1,7 +1,6 @@
 package com.ambroz.formula.gui.swing;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
@@ -21,9 +20,11 @@ import javax.swing.event.ChangeListener;
 
 import com.ambroz.formula.gamemodel.datamodel.Paper;
 import com.ambroz.formula.gamemodel.datamodel.PropertyChanger;
+import com.ambroz.formula.gamemodel.enums.FormulaType;
+import com.ambroz.formula.gamemodel.race.Formula;
 import com.ambroz.formula.gamemodel.race.RaceModel;
 import com.ambroz.formula.gamemodel.track.TrackBuilder;
-import com.ambroz.formula.gui.swing.components.PlayerPanel;
+import com.ambroz.formula.gui.swing.components.FormulaPanel;
 import com.ambroz.formula.gui.swing.components.TabsComponent;
 import com.ambroz.formula.gui.swing.components.TrackListComponent;
 import com.ambroz.formula.gui.swing.menu.TopMenuBar;
@@ -37,7 +38,7 @@ public final class ApplicationWindow extends JFrame implements PropertyChangeLis
 
     private RaceModel raceModel;
     private TrackBuilder builder;
-    private List<PlayerPanel> playerList;
+    private List<FormulaPanel> playerList;
 
     private TrackListComponent trackList;
     private JTabbedPane tabs;
@@ -78,7 +79,6 @@ public final class ApplicationWindow extends JFrame implements PropertyChangeLis
 
         raceModel = new RaceModel(paper);
         raceModel.addPropertyChangeListener(this);
-        raceModel.getTurnMaker().getFormula(1).setColor(Color.BLUE.getRGB());
 
         builder = new TrackBuilder(paper);
         playerList = new ArrayList<>();
@@ -125,21 +125,28 @@ public final class ApplicationWindow extends JFrame implements PropertyChangeLis
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         if (evt.getPropertyName().equals(PropertyChanger.LANGUAGE)) {
-            for (PlayerPanel panel : playerList) {
+            for (FormulaPanel panel : playerList) {
                 panel.setLanguage(raceModel.getLanguage());
             }
         } else if (evt.getPropertyName().equals(PropertyChanger.RACE_NEW_GAME)) {
             playersPanel.removeAll();
-            int racers = raceModel.getTurnMaker().getFormulaCount();
-            playersPanel.setLayout(new GridLayout(racers, 1));
-            PlayerPanel panel;
+            int racers = 0;
+            FormulaPanel panel;
+            Formula form;
 
-            for (int i = 1; i <= racers; i++) {
-                panel = new PlayerPanel(raceModel.getTurnMaker().getFormula(i));
-                panel.setLanguage(raceModel.getLanguage());
-                playersPanel.add(panel);
-                playerList.add(panel);
+            for (int i = 1; i <= raceModel.getTurnMaker().getFormulaCount(); i++) {
+                form = raceModel.getTurnMaker().getFormula(i);
+
+                if (form.getType() != FormulaType.None) {
+                    panel = new FormulaPanel(form);
+                    panel.setLanguage(raceModel.getLanguage());
+                    playersPanel.add(panel);
+                    playerList.add(panel);
+                    racers++;
+                }
             }
+
+            playersPanel.setLayout(new GridLayout(racers, 1));
         }
     }
 

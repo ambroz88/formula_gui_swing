@@ -1,8 +1,10 @@
 package com.ambroz.formula.gui.swing.menu;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Insets;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
@@ -53,6 +55,7 @@ public class RaceMenuBar extends JMenuBar implements PropertyChangeListener {
     private void initButtons() {
         newGame = new JButton(new ImageIcon(getClass().getClassLoader().getResource("NewGame 36x36.png")));
         playAgain = new JButton(new ImageIcon(getClass().getClassLoader().getResource("PlayAgain 36x36.png")));
+        playAgain.setEnabled(false);
         hintPanel = new HintPanel(raceModel);
     }
 
@@ -74,11 +77,19 @@ public class RaceMenuBar extends JMenuBar implements PropertyChangeListener {
             @Override
             public void actionPerformed(ActionEvent evt) {
                 if (!raceModel.getTrack().isEmpty()) {
+
                     StartGameWindow window = new StartGameWindow(raceModel);
+                    Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+                    window.setLocation(dim.width / 2 - window.getWidth() / 2, dim.height / 2 - window.getHeight() / 2);
                     window.setVisible(true);
+
+                    if (!playAgain.isEnabled()) {
+                        playAgain.setEnabled(true);
+                    }
                 }
             }
         });
+
         playAgain.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent evt) {
