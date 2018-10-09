@@ -52,7 +52,7 @@ public final class ConfirmWindow extends JDialog {
 
     public ConfirmWindow(RaceModel raceModel) {
         this.model = raceModel;
-        dialogLabels = new DialogLabels(model.getLanguage().toString());
+        dialogLabels = new DialogLabels(model.getLanguage());
 
         initDialog();
 

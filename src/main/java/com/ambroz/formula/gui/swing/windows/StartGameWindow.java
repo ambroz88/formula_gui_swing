@@ -50,7 +50,7 @@ public final class StartGameWindow extends JDialog {
 
     public StartGameWindow(RaceModel gameModel) {
         this.model = gameModel;
-        gameLabels = new PrepareGameLabels(model.getLanguage().toString());
+        gameLabels = new PrepareGameLabels(model.getLanguage());
 
         initComponent();
         addActions();

@@ -121,7 +121,7 @@ public class FormulaPanel extends JPanel implements PropertyChangeListener {
     }
 
     public void setLanguage(Language language) {
-        statLabels = new StatisticLabels(language.toString());
+        statLabels = new StatisticLabels(language);
         updateMoves();
         updateDistance();
     }

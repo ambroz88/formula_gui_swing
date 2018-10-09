@@ -47,7 +47,7 @@ public class PaperOptionsPanel extends JPanel implements PropertyChangeListener 
         raceModel = gameModel;
         paperModel = gameModel.getPaper();
 
-        optionLabels = new OptionsLabels(gameModel.getLanguage().toString());
+        optionLabels = new OptionsLabels(gameModel.getLanguage());
         setModel = true;
 
         initComponents();
@@ -167,7 +167,7 @@ public class PaperOptionsPanel extends JPanel implements PropertyChangeListener 
             gridSpinner.setValue(evt.getNewValue());
             setModel = true;
         } else if (evt.getPropertyName().equals(PropertyChanger.LANGUAGE)) {
-            optionLabels = new OptionsLabels(raceModel.getLanguage().toString());
+            optionLabels = new OptionsLabels(raceModel.getLanguage());
             setBorder(BorderFactory.createTitledBorder(null, optionLabels.getValue(OptionsLabels.PAPER_TITLE), TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, new Font("Arial", 0, 14)));
 
             labelGrid.setText(optionLabels.getValue(OptionsLabels.PAPER_SIZE));

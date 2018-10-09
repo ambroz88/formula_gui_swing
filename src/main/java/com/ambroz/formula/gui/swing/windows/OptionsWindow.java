@@ -40,7 +40,7 @@ public final class OptionsWindow extends JDialog implements PropertyChangeListen
 
     public OptionsWindow(RaceModel gameModel) {
         this.raceModel = gameModel;
-        optionLabels = new OptionsLabels(raceModel.getLanguage().toString());
+        optionLabels = new OptionsLabels(raceModel.getLanguage());
 
         initDialog();
         initComponents();
@@ -91,7 +91,7 @@ public final class OptionsWindow extends JDialog implements PropertyChangeListen
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         if (evt.getPropertyName().equals("language")) {
-            optionLabels = new OptionsLabels(raceModel.getLanguage().toString());
+            optionLabels = new OptionsLabels(raceModel.getLanguage());
             setTitle(optionLabels.getValue(OptionsLabels.TITLE));
         }
     }

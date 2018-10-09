@@ -35,7 +35,7 @@ public class RaceMenuBar extends JMenuBar implements PropertyChangeListener {
 
     public RaceMenuBar(RaceModel model) {
         this.raceModel = model;
-        startLabels = new StartMenuLabels(this.raceModel.getLanguage().toString());
+        startLabels = new StartMenuLabels(this.raceModel.getLanguage());
 
         initComponents();
     }
@@ -111,7 +111,7 @@ public class RaceMenuBar extends JMenuBar implements PropertyChangeListener {
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         if (evt.getPropertyName().equals(PropertyChanger.LANGUAGE)) {
-            startLabels = new StartMenuLabels(raceModel.getLanguage().toString());
+            startLabels = new StartMenuLabels(raceModel.getLanguage());
             addToolTips();
         }
     }

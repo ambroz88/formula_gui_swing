@@ -52,7 +52,7 @@ public final class TrackListComponent extends JPanel implements ListSelectionLis
 
         raceModel = gameModel;
         builder = trackBuilder;
-        generalLabels = new GeneralLabels(raceModel.getLanguage().toString());
+        generalLabels = new GeneralLabels(raceModel.getLanguage());
 
         initComponents();
         addActions();
@@ -177,7 +177,7 @@ public final class TrackListComponent extends JPanel implements ListSelectionLis
         } else if (evt.getPropertyName().equals(PropertyChanger.RACE_LOAD_TRACK)) {
             loadTrackForRace();
         } else if (evt.getPropertyName().equals(PropertyChanger.LANGUAGE)) {
-            generalLabels = new GeneralLabels(raceModel.getLanguage().toString());
+            generalLabels = new GeneralLabels(raceModel.getLanguage());
             trackLabel.setText(generalLabels.getValue(GeneralLabels.TRACK_TITLE));
         }
     }

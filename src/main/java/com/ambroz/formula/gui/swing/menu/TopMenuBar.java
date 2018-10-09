@@ -38,7 +38,7 @@ public final class TopMenuBar extends JMenuBar {
     public TopMenuBar(RaceModel gModel, TrackBuilder trackBuilder) {
         this.gameModel = gModel;
         this.builder = trackBuilder;
-        optionsLabels = new GeneralLabels(this.gameModel.getLanguage().toString());
+        optionsLabels = new GeneralLabels(this.gameModel.getLanguage());
         setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
         setPreferredSize(new Dimension(TrackListComponent.LIST_WIDTH, 50));
         initComponents();
@@ -73,7 +73,7 @@ public final class TopMenuBar extends JMenuBar {
                     gameModel.setLanguage(Language.Czech);
                     builder.setLanguage(Language.Czech);
                 }
-                optionsLabels = new GeneralLabels(gameModel.getLanguage().toString());
+                optionsLabels = new GeneralLabels(gameModel.getLanguage());
                 optionsMenu.setText(optionsLabels.getValue(GeneralLabels.OPTIONS) + "...");
             }
         });

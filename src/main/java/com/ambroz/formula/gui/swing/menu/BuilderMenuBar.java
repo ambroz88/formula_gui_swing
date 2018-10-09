@@ -43,7 +43,7 @@ public final class BuilderMenuBar extends JMenuBar implements PropertyChangeList
 
     public BuilderMenuBar(TrackBuilder gModel) {
         this.builder = gModel;
-        builderMenuLabels = new TrackMenuLabels(this.builder.getLanguage().toString());
+        builderMenuLabels = new TrackMenuLabels(this.builder.getLanguage());
 
         initComponents();
     }
@@ -176,7 +176,7 @@ public final class BuilderMenuBar extends JMenuBar implements PropertyChangeList
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         if (evt.getPropertyName().equals(PropertyChanger.LANGUAGE)) {
-            builderMenuLabels = new TrackMenuLabels(builder.getLanguage().toString());
+            builderMenuLabels = new TrackMenuLabels(builder.getLanguage());
             addToolTips();
         } else if (evt.getPropertyName().equals(PropertyChanger.TRACK_READY)) {
             saveTrack.setEnabled((Boolean) evt.getNewValue());

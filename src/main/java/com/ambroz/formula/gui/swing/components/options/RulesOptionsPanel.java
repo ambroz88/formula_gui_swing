@@ -47,7 +47,7 @@ public class RulesOptionsPanel extends JPanel implements PropertyChangeListener 
 
     public RulesOptionsPanel(RaceModel gameModel) {
         this.model = gameModel;
-        this.optionLabels = new OptionsLabels(model.getLanguage().toString());
+        this.optionLabels = new OptionsLabels(model.getLanguage());
 
         initComponents();
         addActions();
@@ -172,7 +172,7 @@ public class RulesOptionsPanel extends JPanel implements PropertyChangeListener 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         if (evt.getPropertyName().equals(PropertyChanger.LANGUAGE)) {
-            optionLabels = new OptionsLabels(model.getLanguage().toString());
+            optionLabels = new OptionsLabels(model.getLanguage());
             setBorder(BorderFactory.createTitledBorder(null, optionLabels.getValue(OptionsLabels.RULE_TITLE), TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Arial", 0, 14)));
 
             labelTurns.setText(optionLabels.getValue(OptionsLabels.NO_TURNS));

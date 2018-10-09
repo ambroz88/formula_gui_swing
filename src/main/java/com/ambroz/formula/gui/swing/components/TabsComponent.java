@@ -36,7 +36,7 @@ public class TabsComponent extends JTabbedPane implements PropertyChangeListener
         this.raceModel = gameModel;
         this.builder = trackBuilder;
 
-        generalLabels = new GeneralLabels(raceModel.getLanguage().toString());
+        generalLabels = new GeneralLabels(raceModel.getLanguage());
         raceModel.addPropertyChangeListener(this);
 
         initComponents();
@@ -90,7 +90,7 @@ public class TabsComponent extends JTabbedPane implements PropertyChangeListener
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         if (evt.getPropertyName().equals(PropertyChanger.LANGUAGE)) {
-            generalLabels = new GeneralLabels(raceModel.getLanguage().toString());
+            generalLabels = new GeneralLabels(raceModel.getLanguage());
 
             JLabel raceLabel = (JLabel) getTabComponentAt(0);
             raceLabel.setText(" " + generalLabels.getValue(GeneralLabels.PLAY_GAME) + " ");

@@ -38,7 +38,7 @@ public final class PlayersOptionsPanel extends JPanel implements PropertyChangeL
     public PlayersOptionsPanel(RaceModel gameModel) {
         this.model = gameModel;
         this.model.addPropertyChangeListener(this);
-        this.optionLabels = new OptionsLabels(model.getLanguage().toString());
+        this.optionLabels = new OptionsLabels(model.getLanguage());
 
         setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
         setPreferredSize(new Dimension(OptionsWindow.OPTIONS_WIDTH - OptionsWindow.FRAME_MARGIN, PANEL_HEIGHT));
@@ -78,7 +78,7 @@ public final class PlayersOptionsPanel extends JPanel implements PropertyChangeL
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         if (evt.getPropertyName().equals(PropertyChanger.LANGUAGE)) {
-            optionLabels = new OptionsLabels(model.getLanguage().toString());
+            optionLabels = new OptionsLabels(model.getLanguage());
             setBorder(BorderFactory.createTitledBorder(null, optionLabels.getValue(OptionsLabels.PLAYERS), TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, new Font("Arial", 0, 14))); // NOI18N
             labelShowTurns.setText(optionLabels.getValue(OptionsLabels.SHOW_TURNS));
         }
