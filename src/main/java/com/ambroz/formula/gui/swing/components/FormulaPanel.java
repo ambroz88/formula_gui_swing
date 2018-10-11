@@ -187,7 +187,7 @@ public class FormulaPanel extends JPanel implements PropertyChangeListener {
         } else if (evt.getPropertyName().equals(PropertyChanger.FORMULA_COLOUR)) {
             updateColor();
         } else if (evt.getPropertyName().equals(PropertyChanger.FORMULA_WAIT)) {
-//                updateWait();
+            updateWait();
         }
     }
 
