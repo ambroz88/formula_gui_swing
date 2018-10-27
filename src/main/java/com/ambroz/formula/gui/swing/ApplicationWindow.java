@@ -28,6 +28,7 @@ import com.ambroz.formula.gui.swing.components.FormulaPanel;
 import com.ambroz.formula.gui.swing.components.TabsComponent;
 import com.ambroz.formula.gui.swing.components.TrackListComponent;
 import com.ambroz.formula.gui.swing.menu.TopMenuBar;
+import com.ambroz.formula.gui.swing.windows.ResultWindow;
 
 /**
  * Component that shows main window with track and formulas and toolbar.
@@ -147,6 +148,9 @@ public final class ApplicationWindow extends JFrame implements PropertyChangeLis
             }
 
             playersPanel.setLayout(new GridLayout(racers, 1));
+        } else if (evt.getPropertyName().equals(PropertyChanger.RACE_WINNER)) {
+            ResultWindow results = new ResultWindow(raceModel);
+            results.setVisible(true);
         }
     }
 

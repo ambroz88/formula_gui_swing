@@ -32,6 +32,7 @@ public class RaceMenuBar extends JMenuBar implements PropertyChangeListener {
     private HintPanel hintPanel;
     private JButton playAgain;
     private JButton newGame;
+    private JButton trackResult;
 
     public RaceMenuBar(RaceModel model) {
         this.raceModel = model;
@@ -55,6 +56,7 @@ public class RaceMenuBar extends JMenuBar implements PropertyChangeListener {
     private void initButtons() {
         newGame = new JButton(new ImageIcon(getClass().getClassLoader().getResource("NewGame 36x36.png")));
         playAgain = new JButton(new ImageIcon(getClass().getClassLoader().getResource("PlayAgain 36x36.png")));
+        trackResult = new JButton("Show Score");
         playAgain.setEnabled(false);
         hintPanel = new HintPanel(raceModel);
     }
@@ -97,12 +99,20 @@ public class RaceMenuBar extends JMenuBar implements PropertyChangeListener {
                 raceModel.startGame();
             }
         });
+
+        trackResult.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent evt) {
+                raceModel.firePropertyChange(PropertyChanger.RACE_WINNER, "", "winner");
+            }
+        });
     }
 
     private void addButtonsToBar() {
         JPanel buttons = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 0));
         buttons.add(newGame);
         buttons.add(playAgain);
+        buttons.add(trackResult);
 
         add(buttons, BorderLayout.WEST);
         add(hintPanel, BorderLayout.CENTER);
